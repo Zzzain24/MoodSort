@@ -23,8 +23,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${manrope.variable} h-full antialiased`}
+      style={{ colorScheme: "light" }}
     >
-      <body className="min-h-full bg-[#121212] text-white">{children}</body>
+      <body className="min-h-full bg-[#F5F4F0] text-[#121212]">{children}</body>
     </html>
   );
 }

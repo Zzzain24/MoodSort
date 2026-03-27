@@ -20,17 +20,17 @@ export default function Hero() {
       {/* ── Full-width waveform background ── */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Edge fades */}
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#121212] to-transparent z-10" />
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#121212] to-transparent z-10" />
-        <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-[#121212] to-transparent z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#121212] to-transparent z-10" />
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F4F0] to-transparent z-10" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#F5F4F0] to-transparent z-10" />
+        <div className="absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-[#F5F4F0] to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#F5F4F0] to-transparent z-10" />
 
         {/* Green ambient bloom */}
-        <div className="glow-pulse absolute inset-0 bg-[#1DB954]/6 blur-3xl" />
+        <div className="glow-pulse absolute inset-0 bg-[#1DB954]/[0.03] blur-3xl" />
 
         {/* Bars — full width, centered vertically */}
         <div className="absolute inset-0 flex items-center px-2">
-          <div className="flex items-center justify-between w-full opacity-50">
+          <div className="flex items-center justify-between w-full opacity-25">
             {BARS.map((bar, i) => (
               <div
                 key={i}
@@ -51,17 +51,17 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center text-center gap-7 max-w-4xl w-full">
         {/* Headline */}
         <h1
-          className="fade-up text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight text-white"
+          className="fade-up text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight text-[#121212]"
           style={{ fontFamily: "var(--font-manrope)", animationDelay: "0.1s" }}
         >
           Your music. <span className="text-[#1DB954]">Sorted</span> by mood.{" "}
           <br className="hidden sm:block" />
-          <span className="text-white/80">Automatically.</span>
+          <span className="text-black/80">Automatically.</span>
         </h1>
 
         {/* Subheadline */}
         <p
-          className="fade-up text-base md:text-lg text-white/80 leading-relaxed max-w-2xl"
+          className="fade-up text-base md:text-lg text-black/80 leading-relaxed max-w-2xl"
           style={{ animationDelay: "0.2s" }}
         >
           MoodSort connects to your Spotify library, analyzes your liked songs
@@ -90,7 +90,7 @@ export default function Hero() {
 
           <a
             href="#about"
-            className="inline-flex items-center gap-2 text-base text-white/75 hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-base text-black/75 hover:text-black transition-colors duration-200"
           >
             Learn how it works
             <svg
@@ -107,7 +107,7 @@ export default function Hero() {
 
         {/* Social proof */}
         <p
-          className="fade-up text-sm text-white/50 mt-2"
+          className="fade-up text-sm text-black/50 mt-2"
           style={{ animationDelay: "0.4s" }}
         >
           Reads your liked songs · Creates playlists in your Spotify · Updates

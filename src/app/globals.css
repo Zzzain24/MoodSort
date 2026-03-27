@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #121212;
-  --color-foreground: #ffffff;
+  --color-background: #F5F4F0;
+  --color-foreground: #121212;
   --color-spotify-green: #1db954;
   --color-spotify-green-light: #1ed760;
   --font-sans: var(--font-manrope);
@@ -11,11 +11,13 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
+  background-color: #F5F4F0;
 }
 
 body {
-  background: #121212;
-  color: #ffffff;
+  background: #F5F4F0;
+  color: #121212;
 }
 
 /* ── Equalizer bar animation ── */
@@ -66,11 +68,11 @@ body {
 /* ── Glow pulse (hero visualizer backdrop) ── */
 @keyframes glowPulse {
   0%, 100% {
-    opacity: 0.12;
+    opacity: 0.06;
     transform: scale(1);
   }
   50% {
-    opacity: 0.25;
+    opacity: 0.12;
     transform: scale(1.08);
   }
 }

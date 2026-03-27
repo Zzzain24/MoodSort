@@ -23,14 +23,14 @@ export default function Navbar() {
     >
       {/* ── Main bar ── */}
       <div
-        className={`mx-auto bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex items-center justify-between transition-all duration-300 ease-in-out ${
+        className={`mx-auto bg-[#F5F4F0]/80 backdrop-blur-md border border-black/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] flex items-center justify-between transition-all duration-300 ease-in-out ${
           scrolled ? "max-w-3xl px-4 py-2" : "max-w-7xl px-5 py-3"
         }`}
       >
         {/* Logo */}
         <a href="/" className="flex items-center gap-1">
           <span
-            className={`font-bold tracking-tight text-white transition-all duration-300 ${scrolled ? "text-base" : "text-xl"}`}
+            className={`font-bold tracking-tight text-[#121212] transition-all duration-300 ${scrolled ? "text-base" : "text-xl"}`}
             style={{ fontFamily: "var(--font-manrope)" }}
           >
             Mood
@@ -45,10 +45,10 @@ export default function Navbar() {
 
         {/* Desktop nav links */}
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#about" className="text-sm text-white/60 hover:text-white transition-colors duration-200">
+          <a href="#about" className="text-sm text-black/60 hover:text-black transition-colors duration-200">
             About
           </a>
-          <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors duration-200">
+          <a href="#features" className="text-sm text-black/60 hover:text-black transition-colors duration-200">
             Features
           </a>
         </nav>
@@ -57,7 +57,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="#"
-            className={`inline-flex items-center text-sm text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full transition-all duration-300 ${scrolled ? "px-3 py-1.5" : "px-4 py-2"}`}
+            className={`inline-flex items-center text-sm text-black/70 hover:text-black border border-black/20 hover:border-black/40 rounded-full transition-all duration-300 ${scrolled ? "px-3 py-1.5" : "px-4 py-2"}`}
           >
             Log In
           </a>
@@ -76,17 +76,17 @@ export default function Navbar() {
           aria-label="Toggle menu"
         >
           <span
-            className={`block h-0.5 w-5 bg-white rounded-full transition-all duration-300 origin-center ${
+            className={`block h-0.5 w-5 bg-[#121212] rounded-full transition-all duration-300 origin-center ${
               menuOpen ? "rotate-45 translate-y-2" : ""
             }`}
           />
           <span
-            className={`block h-0.5 w-5 bg-white rounded-full transition-all duration-300 ${
+            className={`block h-0.5 w-5 bg-[#121212] rounded-full transition-all duration-300 ${
               menuOpen ? "opacity-0 scale-x-0" : ""
             }`}
           />
           <span
-            className={`block h-0.5 w-5 bg-white rounded-full transition-all duration-300 origin-center ${
+            className={`block h-0.5 w-5 bg-[#121212] rounded-full transition-all duration-300 origin-center ${
               menuOpen ? "-rotate-45 -translate-y-2" : ""
             }`}
           />
@@ -95,7 +95,7 @@ export default function Navbar() {
 
       {/* ── Mobile dropdown menu ── */}
       <div
-        className={`md:hidden mx-auto mt-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden mx-auto mt-2 bg-[#F5F4F0]/90 backdrop-blur-md border border-black/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden transition-all duration-300 ease-in-out ${
           scrolled ? "max-w-3xl" : "max-w-7xl"
         } ${menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
       >
@@ -103,23 +103,23 @@ export default function Navbar() {
           <a
             href="#about"
             onClick={closeMenu}
-            className="text-sm text-white/60 hover:text-white transition-colors duration-200 py-1"
+            className="text-sm text-black/60 hover:text-black transition-colors duration-200 py-1"
           >
             About
           </a>
           <a
             href="#features"
             onClick={closeMenu}
-            className="text-sm text-white/60 hover:text-white transition-colors duration-200 py-1"
+            className="text-sm text-black/60 hover:text-black transition-colors duration-200 py-1"
           >
             Features
           </a>
-          <div className="h-px bg-white/10" />
+          <div className="h-px bg-black/10" />
           <div className="flex flex-col gap-3 pb-1">
             <a
               href="#"
               onClick={closeMenu}
-              className="w-full text-center text-sm text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full px-4 py-2 transition-all duration-200"
+              className="w-full text-center text-sm text-black/70 hover:text-black border border-black/20 hover:border-black/40 rounded-full px-4 py-2 transition-all duration-200"
             >
               Log In
             </a>

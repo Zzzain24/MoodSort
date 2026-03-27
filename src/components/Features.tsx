@@ -65,12 +65,12 @@ function ClusteringVisual() {
   ];
 
   return (
-    <div className="relative h-56 bg-gradient-to-br from-white/[0.04] to-black/20 flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-black/40 pointer-events-none" />
+    <div className="relative h-56 bg-[#ECEAE4] flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
       {/* Subtle grid lines in background */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.04]" viewBox="0 0 200 224" preserveAspectRatio="none">
-        {[40,80,120,160,200].map(x => <line key={x} x1={x} y1="0" x2={x} y2="224" stroke="white" strokeWidth="1"/>)}
-        {[40,80,120,160,200].map(y => <line key={y} x1="0" y1={y} x2="200" y2={y} stroke="white" strokeWidth="1"/>)}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 200 224" preserveAspectRatio="none">
+        {[40,80,120,160,200].map(x => <line key={x} x1={x} y1="0" x2={x} y2="224" stroke="#121212" strokeWidth="1"/>)}
+        {[40,80,120,160,200].map(y => <line key={y} x1="0" y1={y} x2="200" y2={y} stroke="#121212" strokeWidth="1"/>)}
       </svg>
       <svg viewBox="0 0 100 100" className="w-full h-full">
         {clusters.map(({ color, cx, cy, dots, label, labelX, labelY, floatValues, floatDur, floatDelay, pulseDur, pulseDelay }) => (
@@ -116,11 +116,11 @@ function ClusteringVisual() {
 
 function AutoSyncVisual() {
   return (
-    <div className="relative h-56 bg-gradient-to-br from-white/[0.04] to-black/20 flex flex-col items-center justify-center gap-6 overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-black/40 pointer-events-none" />
+    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-6 overflow-hidden">
+      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
 
       {/* Analog clock */}
-      <div className="relative w-20 h-20 rounded-full border border-white/20 bg-white/[0.05] flex items-center justify-center shadow-[0_0_28px_rgba(29,185,84,0.1)]">
+      <div className="relative w-20 h-20 rounded-full border border-black/20 bg-black/[0.10] flex items-center justify-center shadow-[0_0_28px_rgba(29,185,84,0.1)]">
         <svg viewBox="0 0 40 40" className="w-14 h-14">
           {[0,30,60,90,120,150,180,210,240,270,300,330].map((deg, i) => {
             const rad = (deg - 90) * Math.PI / 180;
@@ -128,25 +128,25 @@ function AutoSyncVisual() {
             const y1 = 20 + 14 * Math.sin(rad);
             const x2 = 20 + (i % 3 === 0 ? 11 : 12.5) * Math.cos(rad);
             const y2 = 20 + (i % 3 === 0 ? 11 : 12.5) * Math.sin(rad);
-            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeOpacity={i % 3 === 0 ? 0.3 : 0.1} strokeWidth={i % 3 === 0 ? 1.5 : 1} />;
+            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#121212" strokeOpacity={i % 3 === 0 ? 0.3 : 0.1} strokeWidth={i % 3 === 0 ? 1.5 : 1} />;
           })}
           {/* Hour hand ~2 o'clock */}
-          <line x1="20" y1="20" x2="27.5" y2="14.5" stroke="white" strokeOpacity="0.75" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="20" y1="20" x2="27.5" y2="14.5" stroke="#121212" strokeOpacity="0.75" strokeWidth="2.2" strokeLinecap="round" />
           {/* Minute hand pointing to 12 */}
           <line x1="20" y1="20" x2="20" y2="7" stroke="#1DB954" strokeWidth="1.8" strokeLinecap="round" />
           <circle cx="20" cy="20" r="1.8" fill="#1DB954" />
         </svg>
-        <span className="absolute -bottom-5 text-[10px] text-white/35 font-mono tracking-wide">2:00</span>
+        <span className="absolute -bottom-5 text-[10px] text-black/35 font-mono tracking-wide">2:00</span>
       </div>
 
       {/* Schedule row */}
       <div className="w-52">
-        <div className="flex items-center justify-between bg-white/[0.07] rounded-xl px-4 py-2.5">
+        <div className="flex items-center justify-between bg-black/[0.12] rounded-xl px-4 py-2.5">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse" />
-            <span className="text-[11px] text-white/70 font-medium">Next sync</span>
+            <span className="text-[11px] text-black/70 font-medium">Next sync</span>
           </div>
-          <span className="text-[11px] text-white/45 font-mono">2:00 AM</span>
+          <span className="text-[11px] text-black/45 font-mono">2:00 AM</span>
         </div>
       </div>
     </div>
@@ -160,20 +160,20 @@ function ReviewQueueVisual() {
   ];
 
   return (
-    <div className="relative h-56 bg-gradient-to-br from-white/[0.04] to-black/20 flex flex-col items-center justify-center gap-3 px-5 overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-black/40 pointer-events-none" />
+    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-3 px-5 overflow-hidden">
+      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
 
       {songs.map((s, i) => (
         <div key={i} className="w-full flex flex-col gap-2">
-          <div className="flex items-center gap-3 bg-white/[0.06] rounded-xl px-3.5 py-2.5">
+          <div className="flex items-center gap-3 bg-black/[0.11] rounded-xl px-3.5 py-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1a3d8b] to-[#0d1f4a] shrink-0 flex items-center justify-center">
               <svg className="w-3.5 h-3.5 text-white/50" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/>
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-white/85 leading-tight truncate">{s.title}</p>
-              <p className="text-[10px] text-white/35 leading-tight">{s.artist}</p>
+              <p className="text-[11px] font-semibold text-black/85 leading-tight truncate">{s.title}</p>
+              <p className="text-[10px] text-black/35 leading-tight">{s.artist}</p>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               <div className="w-7 h-7 rounded-full bg-[#1DB954]/15 border border-[#1DB954]/30 flex items-center justify-center">
@@ -181,18 +181,18 @@ function ReviewQueueVisual() {
                   <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <div className="w-7 h-7 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
-                <svg className="w-3.5 h-3.5 text-white/30" viewBox="0 0 12 12" fill="none">
+              <div className="w-7 h-7 rounded-full bg-black/[0.11] border border-black/10 flex items-center justify-center">
+                <svg className="w-3.5 h-3.5 text-black/30" viewBox="0 0 12 12" fill="none">
                   <path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"/>
                 </svg>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-center gap-1.5">
-            <svg className="w-2.5 h-2.5 text-white/20" viewBox="0 0 12 12" fill="none">
+            <svg className="w-2.5 h-2.5 text-black/20" viewBox="0 0 12 12" fill="none">
               <path d="M6 2v8M2 6h8" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"/>
             </svg>
-            <span className="text-[9px] text-white/25">Add to <span className="text-white/45 font-medium">Late Night</span>?</span>
+            <span className="text-[9px] text-black/25">Add to <span className="text-black/45 font-medium">Late Night</span>?</span>
           </div>
         </div>
       ))}
@@ -208,22 +208,22 @@ const DISCOVERY_SONGS = [
 
 function DiscoveryVisual() {
   return (
-    <div className="relative h-56 bg-gradient-to-br from-white/[0.04] to-black/20 flex flex-col items-center justify-center gap-3 px-5 overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-black/40 pointer-events-none" />
+    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-3 px-5 overflow-hidden">
+      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
 
       {DISCOVERY_SONGS.map((s, i) => (
-        <div key={i} className="w-full flex items-center gap-3 bg-white/[0.04] rounded-xl px-3.5 py-3">
-          <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/10 shrink-0 flex items-center justify-center">
+        <div key={i} className="w-full flex items-center gap-3 bg-black/[0.09] rounded-xl px-3.5 py-3">
+          <div className="w-8 h-8 rounded-lg bg-black/[0.11] border border-black/10 shrink-0 flex items-center justify-center">
             <svg className="w-3.5 h-3.5 text-[#1DB954]" viewBox="0 0 12 12" fill="currentColor">
               <path d="M10 6L4 2v8l6-4z"/>
             </svg>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-white/80 truncate leading-tight">{s.title}</p>
-            <p className="text-[10px] text-white/35 truncate leading-tight">{s.artist}</p>
+            <p className="text-[11px] font-semibold text-black/80 truncate leading-tight">{s.title}</p>
+            <p className="text-[10px] text-black/35 truncate leading-tight">{s.artist}</p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-14 h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div className="w-14 h-1.5 bg-black/15 rounded-full overflow-hidden">
               <div
                 className="h-full bg-[#1DB954] rounded-full"
                 style={{ width: `${s.match}%`, opacity: 0.6 + s.match / 400 }}
@@ -284,13 +284,13 @@ export default function Features() {
             Features
           </p>
           <h2
-            className="text-4xl md:text-5xl font-extrabold text-white mb-5"
+            className="text-4xl md:text-5xl font-extrabold text-[#121212] mb-5"
             style={{ fontFamily: "var(--font-manrope)" }}
           >
             Everything you need.{" "}
-            <span className="text-white/35">Nothing you don&apos;t.</span>
+            <span className="text-black/35">Nothing you don&apos;t.</span>
           </h2>
-          <p className="text-white/50 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="text-black/50 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
             MoodSort handles the full lifecycle — from initial clustering to
             daily sync to discovery, so you never think about playlist
             management again.
@@ -302,19 +302,19 @@ export default function Features() {
           {FEATURES.map(({ Visual, span, title, description }, i) => (
             <div key={i} className={`flex flex-col gap-4 ${span}`}>
               {/* Card — purely visual */}
-              <div className="group rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] hover:border-[#1DB954]/30 transition-all duration-300">
+              <div className="group rounded-2xl overflow-hidden border border-black/[0.15] bg-[#ECEAE4]/60 hover:border-[#1DB954]/40 transition-all duration-300">
                 <Visual />
               </div>
 
               {/* Text — outside the card */}
               <div className="px-1">
                 <h3
-                  className="text-base font-bold text-white mb-1.5"
+                  className="text-base font-bold text-[#121212] mb-1.5"
                   style={{ fontFamily: "var(--font-manrope)" }}
                 >
                   {title}
                 </h3>
-                <p className="text-sm text-white/45 leading-relaxed">
+                <p className="text-sm text-black/45 leading-relaxed">
                   {description}
                 </p>
               </div>
