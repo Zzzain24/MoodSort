@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #121212;
+  --color-foreground: #ffffff;
+  --color-spotify-green: #1db954;
+  --color-spotify-green-light: #1ed760;
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-manrope);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #121212;
+  color: #ffffff;
+}
+
+/* ── Equalizer bar animation ── */
+@keyframes equalize {
+  0%, 100% {
+    transform: scaleY(0.2);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.eq-bar {
+  transform-origin: bottom;
+  animation: equalize 1.2s ease-in-out infinite;
+}
+
+/* ── Fade-up entrance ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* ── Waveform flutter (bars scale from center, up and down) ── */
+@keyframes flutter {
+  0%, 100% { transform: scaleY(0.08); opacity: 0.3;  }
+  50%       { transform: scaleY(1);   opacity: 1;    }
+}
+
+.flutter-bar {
+  transform-origin: center;
+  animation: flutter ease-in-out infinite;
+}
+
+/* ── Glow pulse (hero visualizer backdrop) ── */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.08);
+  }
+}
+
+.glow-pulse {
+  animation: glowPulse 3.5s ease-in-out infinite;
+}
