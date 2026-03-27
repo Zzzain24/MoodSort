@@ -65,8 +65,7 @@ export default function Hero() {
           style={{ animationDelay: "0.2s" }}
         >
           MoodSort connects to your Spotify library, analyzes your liked songs
-          using AI, and organizes them into coherent mood-based playlists. then
-          keeps them updated as your taste evolves.
+          using AI, and organizes them into coherent mood-based playlists.
         </p>
 
         {/* CTAs */}
@@ -75,7 +74,7 @@ export default function Hero() {
           style={{ animationDelay: "0.3s" }}
         >
           <a
-            href="#"
+            href="/login"
             className="inline-flex items-center gap-3 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold px-7 py-4 text-base transition-all duration-200 hover:scale-105 hover:shadow-[0_0_32px_rgba(29,185,84,0.4)]"
           >
             <svg
