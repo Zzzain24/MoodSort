@@ -298,12 +298,12 @@ function AutoSyncVisual() {
               );
             },
           )}
-          {/* Hour hand ~2 o'clock */}
+          {/* Hour hand pointing to 12 */}
           <line
             x1="20"
             y1="20"
-            x2="27.5"
-            y2="14.5"
+            x2="20"
+            y2="12.5"
             stroke="#121212"
             strokeOpacity="0.75"
             strokeWidth="2.2"
@@ -322,7 +322,7 @@ function AutoSyncVisual() {
           <circle cx="20" cy="20" r="1.8" fill="#1DB954" />
         </svg>
         <span className="absolute -bottom-5 text-[10px] text-black/35 font-mono tracking-wide">
-          2:00
+          12:00 AM
         </span>
       </div>
 
@@ -335,7 +335,7 @@ function AutoSyncVisual() {
               Next sync
             </span>
           </div>
-          <span className="text-[11px] text-black/45 font-mono">2:00 AM</span>
+          <span className="text-[11px] text-black/45 font-mono">12:00 AM</span>
         </div>
       </div>
     </div>
