@@ -1,0 +1,26 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          direct_prompt: |
+            Review the changes in this PR. Focus on:
+            - Bugs and logic errors
+            - Security issues
+            - Code quality and readability
+            - Anything that looks off given the project context
+
+            Be concise — this is a personal project, so skip nitpicks.
+            Post inline comments on specific lines where relevant.
