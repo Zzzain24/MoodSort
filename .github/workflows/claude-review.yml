@@ -13,10 +13,13 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4 # ← add this
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: | # ← rename from direct_prompt to prompt
+          prompt: |
             Review the changes in this PR. Focus on:
             - Bugs and logic errors
             - Security issues

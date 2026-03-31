@@ -113,7 +113,7 @@ AI-powered Spotify playlist organizer that clusters liked songs into mood-based 
 - Functions should do one thing — flag large functions that should be split
 - Repeated logic should be extracted into a shared utility
 
-### Next.js / React
+### Next.js/React
 
 - Server Components must be used by default — client components only when necessary
 - Never fetch data in client components if it can be done server-side
