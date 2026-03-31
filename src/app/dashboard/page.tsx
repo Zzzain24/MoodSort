@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
 
@@ -85,11 +86,12 @@ export default async function DashboardPage() {
             {/* Avatar + name */}
             <div className="flex items-center gap-2.5">
               {avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-8 h-8 rounded-full object-cover border border-black/10"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover border border-black/10"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-[#1DB954]/20 border border-[#1DB954]/30 flex items-center justify-center">
@@ -194,8 +196,8 @@ export default async function DashboardPage() {
           <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-6 py-5">
             <h2 className="text-sm font-bold text-[#121212] mb-4">Recently sorted</h2>
             <div className="flex flex-col gap-3">
-              {RECENT_SONGS.map((song, i) => (
-                <div key={i} className="flex items-center gap-3">
+              {RECENT_SONGS.map((song) => (
+                <div key={song.title} className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-black/[0.08] shrink-0 flex items-center justify-center">
                     <svg className="w-3.5 h-3.5 text-[#1DB954]" viewBox="0 0 12 12" fill="currentColor">
                       <path d="M10 6L4 2v8l6-4z" />
