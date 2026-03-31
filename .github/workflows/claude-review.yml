@@ -13,7 +13,7 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # ← add this
+      - uses: actions/checkout@v4 # check actions work
         with:
           fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
