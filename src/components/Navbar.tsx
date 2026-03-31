@@ -56,13 +56,13 @@ export default function Navbar() {
         {/* Desktop auth buttons */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="#"
+            href="/login"
             className={`inline-flex items-center text-sm text-black/70 hover:text-black border border-black/20 hover:border-black/40 rounded-full transition-all duration-300 ${scrolled ? "px-3 py-1.5" : "px-4 py-2"}`}
           >
             Log In
           </a>
           <a
-            href="#"
+            href="/login"
             className={`inline-flex items-center text-sm font-semibold text-black bg-[#1DB954] hover:bg-[#1ed760] rounded-full transition-all duration-300 hover:scale-105 ${scrolled ? "px-3 py-1.5" : "px-4 py-2"}`}
           >
             Sign Up
@@ -117,14 +117,14 @@ export default function Navbar() {
           <div className="h-px bg-black/10" />
           <div className="flex flex-col gap-3 pb-1">
             <a
-              href="#"
+              href="/login"
               onClick={closeMenu}
               className="w-full text-center text-sm text-black/70 hover:text-black border border-black/20 hover:border-black/40 rounded-full px-4 py-2 transition-all duration-200"
             >
               Log In
             </a>
             <a
-              href="#"
+              href="/login"
               onClick={closeMenu}
               className="w-full text-center text-sm font-semibold text-black bg-[#1DB954] hover:bg-[#1ed760] rounded-full px-4 py-2 transition-all duration-200"
             >

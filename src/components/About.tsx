@@ -203,9 +203,9 @@ export default function About() {
             <br className="hidden md:block" /> in under 3 minutes.
           </h2>
           <p className="text-black/50 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            MoodSort analyzes Spotify's audio features — energy, valence, tempo,
-            danceability — combined with Claude AI to understand the emotional
-            feel of every song you've saved.
+            MoodSort analyzes Spotify's audio features such as energy, valence,
+            tempo, danceability, etc. combined with Claude AI to understand the
+            emotional feel of every song you've saved.
           </p>
         </div>
 
