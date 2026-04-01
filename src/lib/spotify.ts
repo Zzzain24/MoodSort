@@ -1,0 +1,137 @@
+import { cache } from 'react'
+import { cookies } from 'next/headers'
+import {
+  type SpotifyImage,
+  type SpotifyPlaylist,
+  getPlaylistThumbnail,
+} from '@/lib/spotify-utils'
+
+export type { SpotifyImage, SpotifyPlaylist }
+export { getPlaylistThumbnail }
+
+function coerceTotal(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value
+  }
+  if (typeof value === 'string' && value.trim() !== '') {
+    const n = Number(value)
+    return Number.isFinite(n) ? n : null
+  }
+  return null
+}
+
+function pagingTotalFromResponse(data: unknown): number | null {
+  if (!data || typeof data !== 'object') return null
+  if ('error' in data) return null
+  if (!('total' in data)) return null
+  return coerceTotal((data as { total: unknown }).total)
+}
+
+async function spotifyAuthorizedGet(
+  token: string,
+  url: string
+): Promise<unknown | null> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+    })
+    if (!res.ok) return null
+    return (await res.json()) as unknown
+  } catch {
+    return null
+  }
+}
+
+// Two-step fallback: try the canonical items endpoint first, then the legacy
+// tracks path. Avoids the previous 4-step waterfall that could make 200 API
+// calls for a 50-playlist library.
+async function resolvePlaylistTrackTotal(
+  token: string,
+  playlistId: string
+): Promise<number | null> {
+  const id = encodeURIComponent(playlistId)
+
+  // Step 1: canonical /items endpoint with limit=0 (no body transferred)
+  const itemsData = await spotifyAuthorizedGet(
+    token,
+    `https://api.spotify.com/v1/playlists/${id}/items?limit=0&fields=total%2Climit`
+  )
+  const itemsTotal = pagingTotalFromResponse(itemsData)
+  if (itemsTotal !== null) return itemsTotal
+
+  // Step 2: legacy /tracks path as final fallback
+  const tracksData = await spotifyAuthorizedGet(
+    token,
+    `https://api.spotify.com/v1/playlists/${id}/tracks?limit=1&fields=total%2Climit`
+  )
+  return pagingTotalFromResponse(tracksData)
+}
+
+// Reads the Spotify access token from its dedicated httpOnly cookie.
+// Deduped per request via React cache so layout + page share one call.
+export const getSpotifyToken = cache(async (): Promise<string | null> => {
+  const cookieStore = await cookies()
+  return cookieStore.get('sp_access_token')?.value ?? null
+})
+
+// Returns the total number of liked songs, or null on failure.
+export const getLikedSongsCount = cache(
+  async (token: string): Promise<number | null> => {
+    try {
+      const res = await fetch(
+        'https://api.spotify.com/v1/me/tracks?limit=1',
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: 'no-store',
+        }
+      )
+      if (!res.ok) return null
+      const data = (await res.json()) as { total?: unknown }
+      return coerceTotal(data.total)
+    } catch {
+      return null
+    }
+  }
+)
+
+// Returns the user's playlists (up to 50), or [] on failure.
+export const getUserPlaylists = cache(
+  async (token: string): Promise<SpotifyPlaylist[]> => {
+    try {
+      const res = await fetch(
+        'https://api.spotify.com/v1/me/playlists?limit=50',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+          cache: 'no-store',
+        }
+      )
+      if (!res.ok) return []
+      const data = (await res.json()) as { items: SpotifyPlaylist[] }
+      const items = data.items ?? []
+      return Promise.all(
+        items.map(async (pl) => {
+          const listed = pl.tracks?.total
+          // `typeof` check (without `> 0`) correctly handles empty playlists
+          // whose total is legitimately 0 — avoids a needless fallback call.
+          if (typeof listed === 'number') {
+            return pl
+          }
+          const total = await resolvePlaylistTrackTotal(token, pl.id)
+          return {
+            ...pl,
+            tracks: { total: total ?? 0 },
+          }
+        })
+      )
+    } catch {
+      return []
+    }
+  }
+)
