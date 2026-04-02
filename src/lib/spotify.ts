@@ -118,7 +118,7 @@ export const getUserPlaylists = cache(
       const items = data.items ?? []
       // Always resolve from the /items endpoint — the simplified count in the
       // listing response can be stale or track-only (excludes episodes), so it
-      // won't match what Spotify shows. All requests use limit=0 and run in
+      // won't match what Spotify shows. All requests use limit=1 and run in
       // parallel, so the overhead is one network round-trip for the batch.
       return Promise.all(
         items.map(async (pl) => {

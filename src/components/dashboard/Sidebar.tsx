@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import {
   LayoutDashboard,
@@ -8,6 +10,7 @@ import {
   ClipboardList,
   SlidersHorizontal,
   Zap,
+  Settings,
   ChevronDown,
   ExternalLink,
   Music2,
@@ -24,22 +27,30 @@ interface SidebarProps {
 
 export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
   const [playlistsOpen, setPlaylistsOpen] = useState(true);
+  const pathname = usePathname();
 
   const firstName = displayName.split(" ")[0];
   const initial = displayName.charAt(0).toUpperCase();
+
+  const navItemClass = (active: boolean) =>
+    `flex items-center gap-2.5 px-3 py-2 rounded-lg transition-colors duration-150 ${
+      active
+        ? "bg-black/[0.07] text-[#121212]"
+        : "text-black/70 hover:bg-black/[0.05] hover:text-[#121212]"
+    }`;
 
   return (
     <aside className="w-[220px] min-h-screen bg-[#ECEAE4] border-r border-black/[0.08] flex flex-col shrink-0 sticky top-0 h-screen overflow-y-auto">
       {/* Logo */}
       <div className="px-5 pt-6 pb-5">
-        <a href="/dashboard" className="flex items-center gap-0.5">
+        <Link href="/dashboard" className="flex items-center gap-0.5">
           <span className="text-base font-bold tracking-tight text-[#121212]">
             Mood
           </span>
           <span className="text-base font-bold tracking-tight text-[#1DB954]">
             Sort
           </span>
-        </a>
+        </Link>
       </div>
 
       <div className="h-px bg-black/[0.07] mx-4" />
@@ -47,13 +58,13 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5">
         {/* Home */}
-        <a
+        <Link
           href="/dashboard"
-          className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-black/[0.07] text-[#121212] transition-colors duration-150"
+          className={navItemClass(pathname === "/dashboard")}
         >
           <LayoutDashboard className="w-4 h-4 shrink-0" />
           <span className="text-sm font-medium">Home</span>
-        </a>
+        </Link>
 
         {/* My Playlists — accordion */}
         <div>
@@ -157,6 +168,17 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
             </span>
           )}
         </button>
+
+        <div className="h-px bg-black/[0.07] my-2" />
+
+        {/* Settings */}
+        <Link
+          href="/dashboard/settings"
+          className={navItemClass(pathname === "/dashboard/settings")}
+        >
+          <Settings className="w-4 h-4 shrink-0" />
+          <span className="text-sm font-medium">Settings</span>
+        </Link>
       </nav>
 
       {/* User section */}
