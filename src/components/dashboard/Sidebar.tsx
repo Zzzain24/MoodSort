@@ -6,9 +6,8 @@ import {
   LayoutDashboard,
   ListMusic,
   ClipboardList,
-  Sparkles,
-  Compass,
-  Settings,
+  SlidersHorizontal,
+  Zap,
   ChevronDown,
   ExternalLink,
   Music2,
@@ -64,7 +63,7 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
           >
             <ListMusic className="w-4 h-4 shrink-0" />
             <span className="text-sm font-medium flex-1 text-left">
-              My Playlists
+              Playlists
             </span>
             {playlists.length > 0 && (
               <ChevronDown
@@ -118,7 +117,31 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
           )}
         </div>
 
-        {/* Pending Review */}
+        {/* Run Mood Sort */}
+        <button
+          disabled
+          title="Coming soon"
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-black/55 cursor-not-allowed"
+        >
+          <Zap className="w-4 h-4 shrink-0" />
+          <span className="text-sm font-medium flex-1 text-left">
+            Run Mood Sort
+          </span>
+        </button>
+
+        {/* Seed songs */}
+        <button
+          disabled
+          title="Coming soon"
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-black/55 cursor-not-allowed"
+        >
+          <SlidersHorizontal className="w-4 h-4 shrink-0" />
+          <span className="text-sm font-medium flex-1 text-left">
+            Seed songs
+          </span>
+        </button>
+
+        {/* Pending review */}
         <button
           disabled
           title="Coming soon"
@@ -126,49 +149,13 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
         >
           <ClipboardList className="w-4 h-4 shrink-0" />
           <span className="text-sm font-medium flex-1 text-left">
-            Pending Review
+            Pending review
           </span>
           {PENDING_REVIEW_COUNT > 0 && (
             <span className="text-[10px] font-bold bg-[#1DB954]/20 text-[#1DB954]/50 rounded-full px-1.5 py-0.5 leading-none">
               {PENDING_REVIEW_COUNT}
             </span>
           )}
-        </button>
-
-        {/* Playlist Suggestions */}
-        <button
-          disabled
-          title="Coming soon"
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-black/55 cursor-not-allowed"
-        >
-          <Sparkles className="w-4 h-4 shrink-0" />
-          <span className="text-sm font-medium flex-1 text-left">
-            Suggestions
-          </span>
-        </button>
-
-        {/* Song Discovery */}
-        <button
-          disabled
-          title="Coming soon"
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-black/55 cursor-not-allowed"
-        >
-          <Compass className="w-4 h-4 shrink-0" />
-          <span className="text-sm font-medium flex-1 text-left">
-            Discovery
-          </span>
-        </button>
-
-        <div className="h-px bg-black/[0.07] my-2" />
-
-        {/* Settings */}
-        <button
-          disabled
-          title="Coming soon"
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-black/55 cursor-not-allowed"
-        >
-          <Settings className="w-4 h-4 shrink-0" />
-          <span className="text-sm font-medium flex-1 text-left">Settings</span>
         </button>
       </nav>
 

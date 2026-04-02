@@ -46,19 +46,20 @@ async function spotifyAuthorizedGet(
   }
 }
 
-// Two-step fallback: try the canonical items endpoint first, then the legacy
-// tracks path. Avoids the previous 4-step waterfall that could make 200 API
-// calls for a 50-playlist library.
+// Fetches the authoritative item count for a playlist via the /items endpoint
+// (which includes both tracks and episodes). Falls back to the legacy /tracks
+// path if /items is unavailable for the playlist type.
 async function resolvePlaylistTrackTotal(
   token: string,
   playlistId: string
 ): Promise<number | null> {
   const id = encodeURIComponent(playlistId)
 
-  // Step 1: canonical /items endpoint with limit=0 (no body transferred)
+  // Step 1: canonical /items endpoint — limit=1 ensures Spotify computes and
+  // returns the correct `total` in the paging response (limit=0 is unreliable).
   const itemsData = await spotifyAuthorizedGet(
     token,
-    `https://api.spotify.com/v1/playlists/${id}/items?limit=0&fields=total%2Climit`
+    `https://api.spotify.com/v1/playlists/${id}/items?limit=1`
   )
   const itemsTotal = pagingTotalFromResponse(itemsData)
   if (itemsTotal !== null) return itemsTotal
@@ -66,7 +67,7 @@ async function resolvePlaylistTrackTotal(
   // Step 2: legacy /tracks path as final fallback
   const tracksData = await spotifyAuthorizedGet(
     token,
-    `https://api.spotify.com/v1/playlists/${id}/tracks?limit=1&fields=total%2Climit`
+    `https://api.spotify.com/v1/playlists/${id}/tracks?limit=1`
   )
   return pagingTotalFromResponse(tracksData)
 }
@@ -115,18 +116,16 @@ export const getUserPlaylists = cache(
       if (!res.ok) return []
       const data = (await res.json()) as { items: SpotifyPlaylist[] }
       const items = data.items ?? []
+      // Always resolve from the /items endpoint — the simplified count in the
+      // listing response can be stale or track-only (excludes episodes), so it
+      // won't match what Spotify shows. All requests use limit=0 and run in
+      // parallel, so the overhead is one network round-trip for the batch.
       return Promise.all(
         items.map(async (pl) => {
-          const listed = pl.tracks?.total
-          // `typeof` check (without `> 0`) correctly handles empty playlists
-          // whose total is legitimately 0 — avoids a needless fallback call.
-          if (typeof listed === 'number') {
-            return pl
-          }
           const total = await resolvePlaylistTrackTotal(token, pl.id)
           return {
             ...pl,
-            tracks: { total: total ?? 0 },
+            tracks: { total: total ?? pl.tracks?.total ?? 0 },
           }
         })
       )
