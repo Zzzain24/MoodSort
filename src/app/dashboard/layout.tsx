@@ -27,7 +27,8 @@ export default async function DashboardLayout({
 
   const displayName =
     user.user_metadata?.full_name ?? user.user_metadata?.name ?? "there";
-  const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
+  const raw = user.user_metadata?.avatar_url
+  const avatarUrl = typeof raw === 'string' ? raw : undefined
 
   // Fetch real playlists for the sidebar accordion
   const token = await getSpotifyToken();

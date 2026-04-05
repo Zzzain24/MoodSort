@@ -17,7 +17,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-import { signOut } from "@/app/actions/auth";
 import { getPlaylistThumbnail, type SpotifyPlaylist } from "@/lib/spotify-utils";
 import { PENDING_REVIEW_COUNT } from "@/lib/constants";
 
@@ -249,7 +248,7 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
 
         {/* Sign out row */}
         {!collapsed && (
-          <form action={signOut}>
+          <form action="/auth/signout" method="POST">
             <button
               type="submit"
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-black/70 hover:bg-black/[0.05] hover:text-[#121212] transition-colors duration-150"
