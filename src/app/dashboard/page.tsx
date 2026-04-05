@@ -53,7 +53,7 @@ export default async function DashboardPage() {
       : null;
 
   return (
-    <div className="px-8 py-8 flex flex-col gap-8 w-full">
+    <div className="max-w-[1200px] mx-auto px-6 py-8 flex flex-col gap-8 w-full">
       {/* ── Welcome header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
