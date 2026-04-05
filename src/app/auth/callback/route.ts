@@ -53,7 +53,12 @@ export async function GET(request: NextRequest) {
 
     const { data: { session }, error } = await supabase.auth.exchangeCodeForSession(code)
 
-    if (!error && session) {
+    if (error) {
+      console.error('[auth/callback] exchangeCodeForSession failed:', error.message)
+      return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`)
+    }
+
+    if (session) {
       const isProd = process.env.NODE_ENV === 'production'
       const baseOptions = {
         httpOnly: true,
