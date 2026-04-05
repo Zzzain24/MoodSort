@@ -27,7 +27,7 @@ export function SettingsClient({
   }
 
   return (
-    <div className="px-8 py-8 flex flex-col gap-6 w-full max-w-2xl mx-auto">
+    <div className="px-8 pt-12 pb-8 flex flex-col gap-6 w-full max-w-2xl mx-auto">
       <div>
         <p className="text-xs font-semibold tracking-widest uppercase text-[#1DB954] mb-1">
           Settings

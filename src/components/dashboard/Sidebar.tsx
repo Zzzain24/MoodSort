@@ -226,56 +226,37 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
       </nav>
 
       {/* User section */}
-      <div className={`${collapsed ? "px-2 py-4 flex justify-center" : "px-4 py-4"} border-t border-black/[0.07]`}>
-        {collapsed ? (
-          <div title={displayName}>
-            {avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt={displayName}
-                width={28}
-                height={28}
-                className="rounded-full object-cover border border-black/10 shrink-0"
-              />
-            ) : (
-              <div className="w-7 h-7 rounded-full bg-[#1DB954]/20 border border-[#1DB954]/30 flex items-center justify-center shrink-0">
-                <span className="text-[10px] font-bold text-[#1DB954]">
-                  {initial}
-                </span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center gap-2.5 mb-3">
-              {avatarUrl ? (
-                <Image
-                  src={avatarUrl}
-                  alt={displayName}
-                  width={28}
-                  height={28}
-                  className="rounded-full object-cover border border-black/10 shrink-0"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-[#1DB954]/20 border border-[#1DB954]/30 flex items-center justify-center shrink-0">
-                  <span className="text-[10px] font-bold text-[#1DB954]">
-                    {initial}
-                  </span>
-                </div>
-              )}
-              <span className="text-xs font-semibold text-[#121212] truncate">
-                {firstName}
-              </span>
+      <div className={`${collapsed ? "px-2" : "px-3"} py-3 border-t border-black/[0.07] flex flex-col gap-0.5`}>
+        {/* Profile row */}
+        <div className={`flex items-center ${collapsed ? "justify-center px-0 py-2.5" : "gap-2.5 px-3 py-2"} rounded-lg`} title={collapsed ? displayName : undefined}>
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt={displayName}
+              width={44}
+              height={44}
+              className="rounded-full object-cover border border-black/10 shrink-0"
+            />
+          ) : (
+            <div className="w-11 h-11 rounded-full bg-[#1DB954]/20 border border-[#1DB954]/30 flex items-center justify-center shrink-0">
+              <span className="text-sm font-bold text-[#1DB954]">{initial}</span>
             </div>
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="text-[11px] text-black/60 hover:text-[#121212] transition-colors duration-200 font-medium"
-              >
-                Sign out
-              </button>
-            </form>
-          </>
+          )}
+          {!collapsed && (
+            <span className="text-sm font-medium text-black/70 truncate">{firstName}</span>
+          )}
+        </div>
+
+        {/* Sign out row */}
+        {!collapsed && (
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-black/70 hover:bg-black/[0.05] hover:text-[#121212] transition-colors duration-150"
+            >
+              Sign out
+            </button>
+          </form>
         )}
       </div>
     </aside>
