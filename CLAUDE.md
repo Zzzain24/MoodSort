@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-AI-powered Spotify playlist organizer that clusters liked songs into mood-based playlists.
+AI-powered Spotify playlist organizer that leverages user's liked songs to create specific user requested playlists from user's liked songs.
 
 ## Tech Stack
 
@@ -145,15 +145,16 @@ AI-powered Spotify playlist organizer that clusters liked songs into mood-based 
 
 ## Best Practices Checklist
 
-- [ ] No secrets or credentials in code
-- [ ] All API routes authenticate the user first
-- [ ] All user inputs validated with Zod
-- [ ] No raw user input in Claude prompts
-- [ ] Rate limiting on all public routes
-- [ ] RLS enabled on all Supabase tables
-- [ ] No unused code, imports, or console logs
-- [ ] TypeScript types are explicit — no `any`
-- [ ] Errors are caught and handled gracefully
-- [ ] Spotify tokens handled server-side only
-- [ ] No data from other users returned in responses
-- [ ] Dead code and stale TODOs cleaned up
+- No secrets or credentials in code
+- All API routes authenticate the user first
+- All user inputs validated with Zod
+- No raw user input in Claude prompts
+- Rate limiting on all public routes
+- RLS enabled on all Supabase tables
+- No unused code, imports, or console logs
+- TypeScript types are explicit — no `any`
+- Errors are caught and handled gracefully
+- Spotify tokens handled server-side only
+- No data from other users returned in responses
+- Dead code and stale TODOs cleaned up
+

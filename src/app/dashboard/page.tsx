@@ -1,22 +1,13 @@
-import Image from "next/image";
-import { Music2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getSpotifyToken,
   getLikedSongsCount,
   getUserPlaylists,
-  getPlaylistThumbnail,
 } from "@/lib/spotify";
 import { SyncButton } from "@/components/dashboard/SyncButton";
+import { PlaylistCarousel } from "@/components/dashboard/PlaylistCarousel";
 import { PENDING_REVIEW_COUNT } from "@/lib/constants";
 
-const RECENT_SONGS = [
-  { title: "Let It Happen", artist: "Tame Impala", mood: "Chill Nights" },
-  { title: "Cant Say", artist: "Travis Scott", mood: "Hype Mode" },
-  { title: "Nights", artist: "Frank Ocean", mood: "Late Night" },
-  { title: "Borderline", artist: "Tame Impala", mood: "Deep Focus" },
-  { title: "Gasoline", artist: "The Weeknd", mood: "Hype Mode" },
-];
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +44,7 @@ export default async function DashboardPage() {
       : null;
 
   return (
-    <div className="px-8 py-8 flex flex-col gap-8 w-full">
+    <div className="max-w-[1200px] mx-auto px-4 md:px-6 pt-8 md:pt-12 pb-8 flex flex-col gap-10 md:gap-8 w-full">
       {/* ── Welcome header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -91,7 +82,7 @@ export default async function DashboardPage() {
           ].map(({ label, value, accent }) => (
             <div
               key={label}
-              className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4"
+              className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-3 md:py-4"
             >
               <p
                 className={`text-2xl font-extrabold ${accent ? "text-[#1DB954]" : "text-[#121212]"}`}
@@ -110,7 +101,7 @@ export default async function DashboardPage() {
           Sync status
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4">
+          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm font-bold text-[#121212]">
                 Manual sync progress
@@ -155,40 +146,38 @@ export default async function DashboardPage() {
         <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55 mb-3">
           Your vibe
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4 overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a6b3c]/10 to-transparent pointer-events-none" />
-            <p className="text-xs text-black/65 mb-1 relative">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-3 md:py-4 overflow-hidden relative">
+            <p className="text-xs text-black/65 mb-1">
               Top mood this week
             </p>
-            <p className="text-lg font-extrabold text-[#121212] relative leading-tight">
+            <p className="text-base md:text-lg font-extrabold text-[#121212] leading-tight">
               Chill Nights
             </p>
-            <p className="text-[11px] text-black/60 mt-1 relative">
+            <p className="text-[11px] text-black/60 mt-1">
               Most active playlist lately
             </p>
-            <span className="absolute bottom-4 right-4 text-[9px] font-bold tracking-widest text-[#1DB954]/40 uppercase">
+            <span className="absolute bottom-3 right-3 text-[9px] font-bold tracking-widest text-[#1DB954]/40 uppercase">
               CHILL
             </span>
           </div>
 
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4 overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#6b1a8b]/8 to-transparent pointer-events-none" />
-            <p className="text-xs text-black/65 mb-1 relative">
+          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-3 md:py-4 overflow-hidden relative">
+            <p className="text-xs text-black/65 mb-1">
               Recently growing
             </p>
-            <p className="text-lg font-extrabold text-[#121212] relative leading-tight">
+            <p className="text-base md:text-lg font-extrabold text-[#121212] leading-tight">
               Hype Mode
             </p>
-            <p className="text-[11px] text-black/60 mt-1 relative">
+            <p className="text-[11px] text-black/60 mt-1">
               +8 songs added this week
             </p>
-            <span className="absolute bottom-4 right-4 text-[9px] font-bold tracking-widest text-purple-400/40 uppercase">
+            <span className="absolute bottom-3 right-3 text-[9px] font-bold tracking-widest text-purple-400/40 uppercase">
               HYPE
             </span>
           </div>
 
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4">
+          <div className="col-span-2 md:col-span-1 bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-3 md:py-4">
             <p className="text-xs text-black/65 mb-1">Library sorted</p>
             <div className="flex items-end gap-1.5 mb-2">
               <p className="text-3xl font-extrabold text-[#121212] leading-none">
@@ -217,103 +206,30 @@ export default async function DashboardPage() {
             </p>
             <span className="text-[11px] text-black/55">Opens in Spotify</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            {playlists.map((pl) => {
-              const thumb = getPlaylistThumbnail(pl.images);
-              return (
-                <a
-                  key={pl.id}
-                  href={pl.external_urls.spotify}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group bg-[#ECEAE4]/60 border border-black/[0.08] rounded-xl overflow-hidden hover:border-[#1DB954]/30 hover:shadow-[0_4px_16px_rgba(29,185,84,0.10)] transition-all duration-300"
-                >
-                  {/* Square card — cover art fills the card, info overlaid at bottom */}
-                  <div className="aspect-square w-full bg-black/[0.06] relative overflow-hidden">
-                    {thumb ? (
-                      <Image
-                        src={thumb}
-                        alt={pl.name}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Music2 className="w-8 h-8 text-black/15" />
-                      </div>
-                    )}
-                    {/* Name + count overlaid on the image */}
-                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2.5">
-                      <p className="text-xs font-bold text-white leading-tight truncate">
-                        {pl.name}
-                      </p>
-                      <p className="text-[10px] text-white/70 mt-0.5">
-                        {pl.tracks?.total ?? 0} songs
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
+          <PlaylistCarousel playlists={playlists} />
         </div>
       )}
 
-      {/* ── Bottom row: recently sorted + pending review ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-8">
+      {/* ── Pending review — full width, only when there are items ── */}
+      {PENDING_REVIEW_COUNT > 0 && (
         <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55 mb-3">
-            Recently sorted
-          </p>
-          <div className="flex flex-col gap-2.5">
-            {RECENT_SONGS.map((song) => (
-              <div key={song.title} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-black/[0.07] shrink-0 flex items-center justify-center">
-                  <svg
-                    className="w-3 h-3 text-[#1DB954]"
-                    viewBox="0 0 12 12"
-                    fill="currentColor"
-                  >
-                    <path d="M10 6L4 2v8l6-4z" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-semibold text-[#121212] truncate leading-tight">
-                    {song.title}
-                  </p>
-                  <p className="text-[11px] text-black/60 truncate leading-tight">
-                    {song.artist}
-                  </p>
-                </div>
-                <span className="text-[10px] text-black/55 shrink-0">
-                  {song.mood}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {PENDING_REVIEW_COUNT > 0 && (
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55">
-                Pending review
-              </p>
-              <span className="text-[10px] font-bold bg-[#1DB954]/15 text-[#1DB954] rounded-full px-2 py-0.5">
-                {PENDING_REVIEW_COUNT} songs
-              </span>
-            </div>
-            <p className="text-sm text-black/65 leading-relaxed mb-4">
-              These songs couldn&apos;t be confidently clustered. Review them to
-              keep your playlists tight.
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55">
+              Pending review
             </p>
-            <button className="w-full rounded-xl border border-black/[0.10] bg-[#F5F4F0] hover:border-[#1DB954]/40 text-sm font-semibold text-[#121212] py-2.5 transition-all duration-200">
-              Review songs →
-            </button>
+            <span className="text-[10px] font-bold bg-[#1DB954]/15 text-[#1DB954] rounded-full px-2 py-0.5">
+              {PENDING_REVIEW_COUNT} songs
+            </span>
           </div>
-        )}
-      </div>
+          <p className="text-sm text-black/65 leading-relaxed mb-4">
+            These songs couldn&apos;t be confidently clustered. Review them to
+            keep your playlists tight.
+          </p>
+          <button className="w-full rounded-xl border border-black/[0.10] bg-[#F5F4F0] hover:border-[#1DB954]/40 text-sm font-semibold text-[#121212] py-2.5 transition-all duration-200">
+            Review songs →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
