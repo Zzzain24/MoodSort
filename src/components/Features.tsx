@@ -1,270 +1,107 @@
 // ── Feature visual mockups ────────────────────────────────────────────────────
 
-function ClusteringVisual() {
-  const clusters = [
-    {
-      color: "#1DB954",
-      label: "CHILL",
-      labelX: 3,
-      labelY: 95,
-      cx: 14,
-      cy: 72,
-      floatValues: "0,0; 3,4; 5,1; 2,-3; -2,2; 0,0",
-      floatDur: "7s",
-      floatDelay: "0s",
-      pulseDur: "3.2s",
-      pulseDelay: "0s",
-      dots: [
-        { x: 8, y: 78, r: 5.5 },
-        { x: 20, y: 66, r: 4.5 },
-        { x: 4, y: 64, r: 4 },
-        { x: 24, y: 78, r: 3.5 },
-        { x: 14, y: 58, r: 3.5 },
-        { x: 4, y: 76, r: 3 },
-      ],
-    },
-    {
-      color: "#a855f7",
-      label: "HYPE",
-      labelX: 74,
-      labelY: 9,
-      cx: 86,
-      cy: 22,
-      floatValues: "0,0; -4,3; -2,-4; 3,-2; 2,3; 0,0",
-      floatDur: "8s",
-      floatDelay: "1.5s",
-      pulseDur: "2.8s",
-      pulseDelay: "0.8s",
-      dots: [
-        { x: 90, y: 16, r: 5.5 },
-        { x: 96, y: 28, r: 4.5 },
-        { x: 78, y: 14, r: 4 },
-        { x: 94, y: 12, r: 3.5 },
-        { x: 80, y: 30, r: 3.5 },
-        { x: 96, y: 18, r: 3 },
-      ],
-    },
-    {
-      color: "#f59e0b",
-      label: "FOCUS",
-      labelX: 44,
-      labelY: 58,
-      cx: 50,
-      cy: 46,
-      floatValues: "0,0; 2,-4; -3,-2; -4,3; 2,4; 0,0",
-      floatDur: "9s",
-      floatDelay: "0.5s",
-      pulseDur: "3.6s",
-      pulseDelay: "1.2s",
-      dots: [
-        { x: 50, y: 40, r: 5.5 },
-        { x: 60, y: 50, r: 4.5 },
-        { x: 40, y: 50, r: 4 },
-        { x: 56, y: 36, r: 3.5 },
-        { x: 44, y: 42, r: 3.5 },
-        { x: 62, y: 40, r: 3 },
-      ],
-    },
-    {
-      color: "#06b6d4",
-      label: "NIGHT",
-      labelX: 3,
-      labelY: 10,
-      cx: 12,
-      cy: 24,
-      floatValues: "0,0; 4,-3; 2,4; -3,3; -2,-3; 0,0",
-      floatDur: "6.5s",
-      floatDelay: "2s",
-      pulseDur: "3s",
-      pulseDelay: "0.4s",
-      dots: [
-        { x: 8, y: 18, r: 5 },
-        { x: 20, y: 22, r: 4 },
-        { x: 4, y: 30, r: 4.5 },
-        { x: 16, y: 12, r: 3.5 },
-        { x: 20, y: 32, r: 3 },
-        { x: 4, y: 20, r: 3 },
-      ],
-    },
-    {
-      color: "#f43f5e",
-      label: "ENERGY",
-      labelX: 74,
-      labelY: 95,
-      cx: 86,
-      cy: 74,
-      floatValues: "0,0; -3,-4; 2,-3; 4,2; -2,4; 0,0",
-      floatDur: "7.5s",
-      floatDelay: "3s",
-      pulseDur: "3.4s",
-      pulseDelay: "1.6s",
-      dots: [
-        { x: 82, y: 80, r: 5 },
-        { x: 94, y: 72, r: 4 },
-        { x: 78, y: 68, r: 4.5 },
-        { x: 92, y: 82, r: 3.5 },
-        { x: 88, y: 66, r: 3 },
-        { x: 96, y: 78, r: 3 },
-      ],
-    },
-  ];
+const VIBE_SEEDS = [
+  { title: "Let It Happen", artist: "Tame Impala" },
+  { title: "Lonely Star", artist: "The Weeknd" },
+  { title: "Stateside", artist: "PinkPantheress" },
+  { title: "Starboy", artist: "The Weeknd" },
+];
 
+const VIBE_MATCHES = [
+  { title: "Nights", artist: "Frank Ocean", score: 94, adding: true },
+  { title: "Gasoline", artist: "The Weeknd", score: 88, adding: true },
+  { title: "Borderline", artist: "Tame Impala", score: 81, adding: true },
+  { title: "E85", artist: "Don Toliver", score: 67, adding: false },
+  { title: "Blinding Lights", artist: "The Weeknd", score: 51, adding: false },
+];
+
+function VibeMatchingVisual() {
   return (
-    <div className="relative h-56 bg-[#ECEAE4] flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
-      {/* Subtle grid lines in background */}
-      <svg
-        className="absolute inset-0 w-full h-full opacity-[0.08]"
-        viewBox="0 0 200 224"
-        preserveAspectRatio="none"
-      >
-        {[40, 80, 120, 160, 200].map((x) => (
-          <line
-            key={x}
-            x1={x}
-            y1="0"
-            x2={x}
-            y2="224"
-            stroke="#121212"
-            strokeWidth="1"
-          />
+    <div className="relative h-full min-h-56 bg-[#ECEAE4] flex flex-col overflow-hidden">
+      {/* ── Seeds zone ── */}
+      <div className="px-6 pt-6 pb-4">
+        <p className="text-[9px] font-bold text-black/30 uppercase tracking-widest mb-3">
+          Your 10 seed songs
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {VIBE_SEEDS.map((s, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-2.5 bg-black/[0.07] rounded-xl px-3 py-2.5"
+            >
+              <div className="w-2 h-2 rounded-full bg-[#1DB954]/70 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold text-black/75 truncate leading-snug">
+                  {s.title}
+                </p>
+                <p className="text-[10px] text-black/35 truncate leading-snug mt-0.5">
+                  {s.artist}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-black/25 mt-2.5 pl-1">+ 6 more seeds</p>
+      </div>
+
+      {/* ── AI scanning divider ── */}
+      <div className="flex items-center gap-3 px-6 py-1">
+        <div className="flex-1 h-px bg-black/[0.08]" />
+        <div className="flex items-center gap-1.5 bg-black/[0.07] rounded-full px-3 py-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-pulse" />
+          <span className="text-[9px] font-semibold text-black/40 uppercase tracking-wider">
+            AI scanning your library
+          </span>
+        </div>
+        <div className="flex-1 h-px bg-black/[0.08]" />
+      </div>
+
+      {/* ── Matches zone ── */}
+      <div className="flex-1 px-6 pt-4 pb-6 flex flex-col gap-2.5 min-h-0">
+        <p className="text-[9px] font-bold text-black/30 uppercase tracking-widest mb-1">
+          Matches found in your library
+        </p>
+        {VIBE_MATCHES.map((s, i) => (
+          <div key={i} className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0 mr-3">
+                <p className="text-[12px] font-semibold text-black/75 truncate leading-snug">
+                  {s.title}
+                </p>
+                <p className="text-[10px] text-black/35 truncate leading-snug">
+                  {s.artist}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span
+                  className={`text-[11px] font-bold tabular-nums ${
+                    s.adding ? "text-[#1DB954]/80" : "text-black/30"
+                  }`}
+                >
+                  {s.score}%
+                </span>
+                {s.adding ? (
+                  <span className="text-[9px] font-semibold text-[#1DB954]/70 bg-[#1DB954]/10 rounded-full px-2 py-0.5 leading-none">
+                    Adding
+                  </span>
+                ) : (
+                  <span className="text-[9px] font-medium text-black/25 bg-black/[0.06] rounded-full px-2 py-0.5 leading-none">
+                    Skip
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="h-[3px] bg-black/[0.08] rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full ${s.adding ? "bg-[#1DB954]" : "bg-black/20"}`}
+                style={{ width: `${s.score}%`, opacity: s.adding ? 0.65 : 0.35 }}
+              />
+            </div>
+          </div>
         ))}
-        {[40, 80, 120, 160, 200].map((y) => (
-          <line
-            key={y}
-            x1="0"
-            y1={y}
-            x2="200"
-            y2={y}
-            stroke="#121212"
-            strokeWidth="1"
-          />
-        ))}
-      </svg>
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        {clusters.map(
-          ({
-            color,
-            cx,
-            cy,
-            dots,
-            label,
-            labelX,
-            labelY,
-            floatValues,
-            floatDur,
-            floatDelay,
-            pulseDur,
-            pulseDelay,
-          }) => (
-            <g key={label}>
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values={floatValues}
-                dur={floatDur}
-                begin={floatDelay}
-                repeatCount="indefinite"
-                calcMode="spline"
-                keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-              />
-              {/* Outer pulse halo */}
-              <circle cx={cx} cy={cy} r="24" fill={color} fillOpacity="0.04">
-                <animate
-                  attributeName="r"
-                  values="24;28;24"
-                  dur={pulseDur}
-                  begin={pulseDelay}
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-                />
-                <animate
-                  attributeName="fill-opacity"
-                  values="0.04;0.08;0.04"
-                  dur={pulseDur}
-                  begin={pulseDelay}
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-                />
-              </circle>
-              {/* Inner halo */}
-              <circle cx={cx} cy={cy} r="15" fill={color} fillOpacity="0.08">
-                <animate
-                  attributeName="r"
-                  values="15;18;15"
-                  dur={pulseDur}
-                  begin={pulseDelay}
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-                />
-                <animate
-                  attributeName="fill-opacity"
-                  values="0.08;0.14;0.08"
-                  dur={pulseDur}
-                  begin={pulseDelay}
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95"
-                />
-              </circle>
-              {/* Centroid */}
-              <circle cx={cx} cy={cy} r="2.2" fill={color} fillOpacity="0.4">
-                <animate
-                  attributeName="fill-opacity"
-                  values="0.4;0.7;0.4"
-                  dur={pulseDur}
-                  begin={pulseDelay}
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <line
-                x1={cx - 4}
-                y1={cy}
-                x2={cx + 4}
-                y2={cy}
-                stroke={color}
-                strokeOpacity="0.2"
-                strokeWidth="0.7"
-              />
-              <line
-                x1={cx}
-                y1={cy - 4}
-                x2={cx}
-                y2={cy + 4}
-                stroke={color}
-                strokeOpacity="0.2"
-                strokeWidth="0.7"
-              />
-              {/* Dots */}
-              {dots.map((d, i) => (
-                <circle
-                  key={i}
-                  cx={d.x}
-                  cy={d.y}
-                  r={d.r}
-                  fill={color}
-                  fillOpacity={0.7 + i * 0.03}
-                />
-              ))}
-              {/* Label */}
-              <text
-                x={labelX}
-                y={labelY}
-                fontSize="4.5"
-                fill={color}
-                fillOpacity="0.45"
-                fontWeight="700"
-                letterSpacing="0.8"
-              >
-                {label}
-              </text>
-            </g>
-          ),
-        )}
-      </svg>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
     </div>
   );
 }
@@ -344,8 +181,8 @@ function AutoSyncVisual() {
 
 function ReviewQueueVisual() {
   const songs = [
-    { title: "Nights", artist: "The Weeknd", approve: true },
-    { title: "Blinding Lights", artist: "The Weeknd", approve: false },
+    { title: "Nights", artist: "The Weeknd" },
+    { title: "Blinding Lights", artist: "The Weeknd" },
   ];
 
   return (
@@ -428,86 +265,20 @@ function ReviewQueueVisual() {
   );
 }
 
-const DISCOVERY_SONGS = [
-  { title: "Borderline", artist: "Tame Impala", match: 94 },
-  { title: "Gasoline", artist: "The Weeknd", match: 88 },
-  { title: "Passion Pain", artist: "PinkPantheress", match: 81 },
-];
-
-function DiscoveryVisual() {
-  return (
-    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-3 px-5 overflow-hidden">
-      <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
-
-      {DISCOVERY_SONGS.map((s, i) => (
-        <div
-          key={i}
-          className="w-full flex items-center gap-3 bg-black/[0.09] rounded-xl px-3.5 py-3"
-        >
-          <div className="w-8 h-8 rounded-lg bg-black/[0.11] border border-black/10 shrink-0 flex items-center justify-center">
-            <svg
-              className="w-3.5 h-3.5 text-[#1DB954]"
-              viewBox="0 0 12 12"
-              fill="currentColor"
-            >
-              <path d="M10 6L4 2v8l6-4z" />
-            </svg>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-black/80 truncate leading-tight">
-              {s.title}
-            </p>
-            <p className="text-[10px] text-black/35 truncate leading-tight">
-              {s.artist}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-14 h-1.5 bg-black/15 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#1DB954] rounded-full"
-                style={{ width: `${s.match}%`, opacity: 0.6 + s.match / 400 }}
-              />
-            </div>
-            <span className="text-[9px] text-[#1DB954]/65 w-6 text-right font-medium">
-              {s.match}%
-            </span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ── Feature definitions ───────────────────────────────────────────────────────
 
-const FEATURES = [
-  {
-    Visual: ClusteringVisual,
-    span: "lg:col-span-2",
-    title: "Vibe Matching Engine",
-    description:
-      "MoodSort builds an audio profile from your 10 seed songs and uses AI to find every song in your library that truly fits. Not just numerically close, but contextually right.",
-  },
+const SIDE_FEATURES = [
   {
     Visual: AutoSyncVisual,
-    span: "lg:col-span-1",
     title: "Auto-Sync Daily",
     description:
       "Every new song you like is automatically scored and slotted into the right playlist daily.",
   },
   {
     Visual: ReviewQueueVisual,
-    span: "lg:col-span-1",
     title: "Pending Review Queue",
     description:
       "Borderline songs surface for your approval before being added, so your playlists stay tight.",
-  },
-  {
-    Visual: DiscoveryVisual,
-    span: "lg:col-span-2",
-    title: "Song Discovery",
-    description:
-      "Get 5–10 Spotify-recommended songs per playlist, matched to each mood's audio fingerprint so they actually fit.",
   },
 ];
 
@@ -537,35 +308,55 @@ export default function Features() {
           </p>
         </div>
 
-        {/* Bento grid */}
+        {/* Bento grid — 2 + 1 stacked */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {FEATURES.map(({ Visual, span, title, description }, i) => (
-            <div key={i} className={`flex flex-col gap-4 ${span}`}>
-              {/* Card — purely visual */}
-              <div className="group rounded-2xl overflow-hidden border border-black/[0.15] bg-[#ECEAE4]/60 hover:border-[#1DB954]/40 transition-all duration-300">
-                <Visual />
-              </div>
-
-              {/* Text — outside the card */}
-              <div className="px-1">
-                <h3
-                  className="text-base font-bold text-[#121212] mb-1.5"
-                  style={{ fontFamily: "var(--font-manrope)" }}
-                >
-                  {title}
-                </h3>
-                <p className="text-sm text-black/45 leading-relaxed">
-                  {description}
-                </p>
-              </div>
+          {/* Vibe Matching Engine — spans 2 cols */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            <div className="group rounded-2xl overflow-hidden border border-black/[0.15] bg-[#ECEAE4]/60 hover:border-[#1DB954]/40 transition-all duration-300 flex-1">
+              <VibeMatchingVisual />
             </div>
-          ))}
+            <div className="px-1">
+              <h3
+                className="text-base font-bold text-[#121212] mb-1.5"
+                style={{ fontFamily: "var(--font-manrope)" }}
+              >
+                Vibe Matching Engine
+              </h3>
+              <p className="text-sm text-black/45 leading-relaxed">
+                MoodSort builds an audio profile from your 10 seed songs and
+                uses AI to find every song in your library that truly fits. Not
+                just numerically close, but contextually right.
+              </p>
+            </div>
+          </div>
+
+          {/* Right column — Auto-Sync + Review Queue stacked */}
+          <div className="lg:col-span-1 grid grid-cols-2 lg:grid-cols-1 gap-5">
+            {SIDE_FEATURES.map(({ Visual, title, description }, i) => (
+              <div key={i} className="flex flex-col gap-4">
+                <div className="group rounded-2xl overflow-hidden border border-black/[0.15] bg-[#ECEAE4]/60 hover:border-[#1DB954]/40 transition-all duration-300">
+                  <Visual />
+                </div>
+                <div className="px-1">
+                  <h3
+                    className="text-base font-bold text-[#121212] mb-1.5"
+                    style={{ fontFamily: "var(--font-manrope)" }}
+                  >
+                    {title}
+                  </h3>
+                  <p className="text-sm text-black/45 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom CTA */}
         <div className="mt-16 flex flex-col items-center gap-5 text-center">
           <a
-            href="#"
+            href="/login"
             className="inline-flex items-center gap-3 rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold px-7 py-4 text-sm transition-all duration-200 hover:scale-105 hover:shadow-[0_0_32px_rgba(29,185,84,0.4)]"
           >
             <svg

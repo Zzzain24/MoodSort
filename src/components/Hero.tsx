@@ -66,7 +66,7 @@ export default function Hero() {
         >
           MoodSort connects to your Spotify library, analyzes your liked songs
           using AI, and builds playlists around the exact vibe you have in mind.
-          You name it, MoodSort find the songs.
+          You name it, MoodSort finds the songs.
         </p>
 
         {/* CTAs */}
