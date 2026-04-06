@@ -65,7 +65,8 @@ export default function Hero() {
           style={{ animationDelay: "0.2s" }}
         >
           MoodSort connects to your Spotify library, analyzes your liked songs
-          using AI, and organizes them into coherent mood-based playlists.
+          using AI, and builds playlists around the exact vibe you have in mind.
+          You name it, MoodSort find the songs.
         </p>
 
         {/* CTAs */}
@@ -109,8 +110,7 @@ export default function Hero() {
           className="fade-up text-sm text-black/50 mt-2"
           style={{ animationDelay: "0.4s" }}
         >
-          Reads your liked songs · Creates playlists in your Spotify · Updates
-          automatically
+          Name a vibe · Pick 10 seeds · Find every match in your library
         </p>
       </div>
     </section>

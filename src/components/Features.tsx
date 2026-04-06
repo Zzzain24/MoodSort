@@ -484,16 +484,16 @@ const FEATURES = [
   {
     Visual: ClusteringVisual,
     span: "lg:col-span-2",
-    title: "AI Mood Clustering",
+    title: "Vibe Matching Engine",
     description:
-      "K-means clustering on Spotify audio features, then named by Claude AI to capture the true emotional feel of each group.",
+      "MoodSort builds an audio profile from your 10 seed songs and uses AI to find every song in your library that truly fits. Not just numerically close, but contextually right.",
   },
   {
     Visual: AutoSyncVisual,
     span: "lg:col-span-1",
     title: "Auto-Sync Daily",
     description:
-      "Every new song you like is automatically scored and slotted into the right playlist overnight.",
+      "Every new song you like is automatically scored and slotted into the right playlist daily.",
   },
   {
     Visual: ReviewQueueVisual,
@@ -532,9 +532,8 @@ export default function Features() {
             <span className="text-black/35">Nothing you don&apos;t.</span>
           </h2>
           <p className="text-black/50 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-            MoodSort handles the full lifecycle from initial clustering to daily
-            sync to discovery, so you never think about playlist management
-            again.
+            MoodSort handles everything from vibe matching to daily sync to
+            discovery, so you never think about playlist management again.
           </p>
         </div>
 
