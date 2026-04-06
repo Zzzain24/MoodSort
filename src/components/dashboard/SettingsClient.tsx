@@ -91,37 +91,54 @@ export function SettingsClient({
           Permanently delete your MoodSort account. This cannot be undone.
         </p>
 
-        {!showConfirm ? (
+        <div className="relative inline-block">
           <button
             onClick={() => setShowConfirm(true)}
             className="rounded-xl border border-red-300 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 transition-colors duration-200"
           >
             Delete account
           </button>
-        ) : (
-          <div className="bg-white/70 border border-red-200 rounded-xl px-4 py-4 flex flex-col gap-3">
-            <p className="text-sm font-semibold text-[#121212]">
-              Are you sure? This will permanently delete your account and all
-              associated data.
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleDelete}
-                disabled={isPending}
-                className="rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-4 py-2 transition-colors duration-200"
-              >
-                {isPending ? "Deleting…" : "Yes, delete my account"}
-              </button>
-              <button
+
+          {showConfirm && (
+            <>
+              {/* Dark overlay */}
+              <div
+                className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px]"
                 onClick={() => setShowConfirm(false)}
-                disabled={isPending}
-                className="rounded-xl border border-black/[0.10] bg-[#F5F4F0] hover:border-black/20 text-sm font-semibold text-[#121212] px-4 py-2 transition-colors duration-200"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+              />
+
+              {/* Popover — centered on screen */}
+              <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] z-50 bg-[#F5F4F0] rounded-2xl shadow-[0_16px_60px_rgba(0,0,0,0.18)] border border-red-200 p-6 flex flex-col gap-4">
+                <div>
+                  <p className="text-sm font-bold text-[#121212] mb-1.5">
+                    Are you sure?
+                  </p>
+                  <p className="text-xs text-black/55 leading-relaxed">
+                    This will permanently delete your account and all associated
+                    data. This cannot be undone.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDelete}
+                    disabled={isPending}
+                    className="rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-4 py-2 transition-colors duration-200"
+                  >
+                    {isPending ? "Deleting…" : "Yes, delete my account"}
+                  </button>
+                  <button
+                    onClick={() => setShowConfirm(false)}
+                    disabled={isPending}
+                    className="rounded-xl border border-black/[0.10] bg-[#F5F4F0] hover:border-black/20 text-sm font-semibold text-[#121212] px-4 py-2 transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

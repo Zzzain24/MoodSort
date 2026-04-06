@@ -82,13 +82,13 @@ function SongsVisual() {
       {/* Progress bar */}
       <div className="mt-auto pt-2 border-t border-black/10 shrink-0">
         <div className="flex justify-between text-[9px] text-black/35 mb-1">
-          <span>47 selected</span>
-          <span>50 minimum</span>
+          <span>7 selected</span>
+          <span>10 required</span>
         </div>
         <div className="h-1 bg-black/15 rounded-full overflow-hidden">
           <div
             className="h-full bg-[#1DB954] rounded-full"
-            style={{ width: "94%" }}
+            style={{ width: "70%" }}
           />
         </div>
       </div>
@@ -170,16 +170,16 @@ const STEPS = [
   {
     number: "02",
     Visual: SongsVisual,
-    title: "Pick Seed Songs",
+    title: "Name Your Vibe",
     description:
-      "Select 50+ songs that represent your taste. The AI uses these to learn your moods and define your playlist clusters.",
+      "Give your playlist a name and optional description, then pick exactly 10 seed songs that represent the feeling you're going for.",
   },
   {
     number: "03",
     Visual: PlaylistsVisual,
-    title: "AI Builds Your Playlists",
+    title: "Preview & Approve",
     description:
-      "MoodSort clusters your entire library into 3–5 named mood playlists and creates them directly in your Spotify.",
+      "MoodSort scans your full library and ranks every matching song. Review the results, remove anything that doesn't fit, then approve. New playlist lands directly in your Spotify.",
   },
 ];
 
@@ -203,9 +203,9 @@ export default function About() {
             <br className="hidden md:block" /> in under 3 minutes.
           </h2>
           <p className="text-black/50 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            MoodSort analyzes Spotify's audio features such as energy, valence,
-            tempo, danceability, etc. combined with Claude AI to understand the
-            emotional feel of every song you've saved.
+            MoodSort analyzes Spotify audio features — energy, valence, tempo,
+            danceability — combined with AI to match every song in your library
+            to the exact vibe you describe.
           </p>
         </div>
 
@@ -239,9 +239,9 @@ export default function About() {
         </div>
 
         <p className="mt-10 text-center text-sm text-black/30">
-          Once your playlists are approved, MoodSort sorts{" "}
-          <span className="text-black/50">every song in your library</span> —
-          not just your seed picks.
+          Once you approve the preview, MoodSort creates the playlist in your{" "}
+          <span className="text-black/50">Spotify</span> exactly as you
+          selected.
         </p>
       </div>
     </section>
