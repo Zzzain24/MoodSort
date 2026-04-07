@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ListMusic, Settings } from "lucide-react";
+import { LayoutDashboard, ListMusic, Zap, Settings } from "lucide-react";
 
 const items = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Home", exact: true },
   { href: "/dashboard", icon: ListMusic, label: "Playlists", exact: false },
+  { href: "/dashboard/run", icon: Zap, label: "Create", exact: true },
   { href: "/dashboard/settings", icon: Settings, label: "Settings", exact: true },
 ];
 

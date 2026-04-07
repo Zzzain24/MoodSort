@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   ListMusic,
   ClipboardList,
-  SlidersHorizontal,
   Zap,
   Settings,
   ChevronDown,
@@ -163,32 +162,14 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
         )}
 
         {/* Run Mood Sort */}
-        <button
-          disabled
-          title={collapsed ? "Run Mood Sort (coming soon)" : "Coming soon"}
-          className={disabledItemClass}
+        <Link
+          href="/dashboard/run"
+          className={navItemClass(pathname === "/dashboard/run")}
+          title={collapsed ? "Run Mood Sort" : undefined}
         >
           <Zap className="w-4 h-4 shrink-0" />
-          {!collapsed && (
-            <span className="text-sm font-medium flex-1 text-left">
-              Run Mood Sort
-            </span>
-          )}
-        </button>
-
-        {/* Seed songs */}
-        <button
-          disabled
-          title={collapsed ? "Seed songs (coming soon)" : "Coming soon"}
-          className={disabledItemClass}
-        >
-          <SlidersHorizontal className="w-4 h-4 shrink-0" />
-          {!collapsed && (
-            <span className="text-sm font-medium flex-1 text-left">
-              Seed songs
-            </span>
-          )}
-        </button>
+          {!collapsed && <span className="text-sm font-medium">Run Mood Sort</span>}
+        </Link>
 
         {/* Pending review */}
         <button
