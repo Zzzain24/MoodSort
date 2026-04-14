@@ -1,12 +1,24 @@
 import { createClient } from "@/lib/supabase/server";
 import {
-  getSpotifyToken,
+  getOrRefreshSpotifyToken,
   getLikedSongsCount,
   getUserPlaylists,
 } from "@/lib/spotify";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { SyncButton } from "@/components/dashboard/SyncButton";
 import { PlaylistCarousel } from "@/components/dashboard/PlaylistCarousel";
 import { PENDING_REVIEW_COUNT } from "@/lib/constants";
+
+function formatRelativeTime(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 
 
 export const dynamic = "force-dynamic";
@@ -22,19 +34,26 @@ export default async function DashboardPage() {
   const firstName = displayName.split(" ")[0];
 
   // Fetch real Spotify data — getUserPlaylists is deduped with the layout call
-  const token = await getSpotifyToken();
-  const [likedCount, playlists] = await Promise.all([
+  const token = await getOrRefreshSpotifyToken();
+  const admin = createAdminClient();
+  const [likedCount, playlists, syncStateRow] = await Promise.all([
     token ? getLikedSongsCount(token) : Promise.resolve(null),
     token ? getUserPlaylists(token) : Promise.resolve([]),
+    admin
+      .from("user_sync_state")
+      .select("last_synced_at")
+      .eq("user_id", user!.id)
+      .maybeSingle(),
   ]);
+
+  const lastSyncedAt =
+    (syncStateRow.data?.last_synced_at as string | null) ?? null;
+  const lastSyncedLabel = lastSyncedAt
+    ? formatRelativeTime(new Date(lastSyncedAt))
+    : null;
 
   const likedSongsDisplay =
     likedCount !== null ? likedCount.toLocaleString() : "—";
-
-  const manualSyncCount = 7;
-  const manualSyncThreshold = 10;
-  const manualSyncRemaining = manualSyncThreshold - manualSyncCount;
-  const manualSyncProgress = (manualSyncCount / manualSyncThreshold) * 100;
 
   // Placeholder until real sort data comes from the DB
   const sortedCount = 0;
@@ -54,11 +73,13 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-extrabold text-[#121212] leading-tight">
             Hey, {firstName}
           </h1>
-          <p className="text-black/65 mt-1 text-sm">
-            Last synced 2 hours ago &middot; Next auto-sync in 6h
-          </p>
+          {lastSyncedLabel && (
+            <p className="text-black/65 mt-1 text-sm">
+              Last synced {lastSyncedLabel}
+            </p>
+          )}
         </div>
-        <SyncButton />
+        <SyncButton lastSyncedAt={lastSyncedAt} />
       </div>
 
       {/* ── Row 1: Core counts ── */}
@@ -95,53 +116,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Row 2: Sync status ── */}
-      <div>
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55 mb-3">
-          Sync status
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-4 md:px-5 py-4">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-bold text-[#121212]">
-                Manual sync progress
-              </p>
-              <span className="text-[11px] font-semibold text-black/65">
-                {manualSyncCount} / {manualSyncThreshold} songs
-              </span>
-            </div>
-            <div className="w-full h-1.5 bg-black/[0.08] rounded-full overflow-hidden mb-2">
-              <div
-                className="h-full bg-[#1DB954] rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(manualSyncProgress, 100)}%` }}
-              />
-            </div>
-            <p className="text-xs text-black/65">
-              {manualSyncRemaining > 0
-                ? `${manualSyncRemaining} more song${manualSyncRemaining !== 1 ? "s" : ""} to unlock Run MoodSort Now`
-                : "Ready — run a manual sync anytime"}
-            </p>
-          </div>
-
-          <div className="bg-[#ECEAE4]/60 border border-black/[0.08] rounded-2xl px-5 py-4">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-bold text-[#121212]">Auto-sync</p>
-              <div className="flex items-center gap-1.5 bg-[#1DB954]/10 border border-[#1DB954]/20 rounded-full px-2.5 py-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-pulse" />
-                <span className="text-[11px] font-semibold text-[#1DB954]">
-                  Next in 6h
-                </span>
-              </div>
-            </div>
-            <p className="text-xs text-black/65">Last synced 2 hours ago</p>
-            <p className="text-xs text-black/55 mt-0.5">
-              Runs daily — new liked songs sorted automatically
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Row 3: Fun Spotify stats ── */}
+      {/* ── Row 2: Fun Spotify stats ── */}
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-widest text-black/55 mb-3">
           Your vibe

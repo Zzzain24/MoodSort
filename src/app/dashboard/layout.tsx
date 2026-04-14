@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { MobileBottomNav } from "@/components/dashboard/MobileBottomNav";
 import { SyncTrigger } from "@/components/dashboard/SyncTrigger";
-import { getSpotifyToken, getUserPlaylists } from "@/lib/spotify";
+import { getOrRefreshSpotifyToken, getUserPlaylists } from "@/lib/spotify";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -31,8 +31,12 @@ export default async function DashboardLayout({
   const raw = user.user_metadata?.avatar_url
   const avatarUrl = typeof raw === 'string' ? raw : undefined
 
+  // Resolve Spotify token — silently refreshes using sp_refresh_token if the
+  // access token has expired. Deduped via React cache so page.tsx reuses the
+  // same result without a second refresh call.
+  const token = await getOrRefreshSpotifyToken();
+
   // Fetch real playlists for the sidebar accordion
-  const token = await getSpotifyToken();
   const playlists = token ? await getUserPlaylists(token) : [];
 
   return (
