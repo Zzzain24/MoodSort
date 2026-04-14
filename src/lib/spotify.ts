@@ -5,6 +5,7 @@ import {
   type SpotifyPlaylist,
   getPlaylistThumbnail,
 } from '@/lib/spotify-utils'
+import { refreshSpotifyToken } from '@/lib/spotify-token'
 
 export type { SpotifyImage, SpotifyPlaylist }
 export { getPlaylistThumbnail }
@@ -77,6 +78,24 @@ async function resolvePlaylistTrackTotal(
 export const getSpotifyToken = cache(async (): Promise<string | null> => {
   const cookieStore = await cookies()
   return cookieStore.get('sp_access_token')?.value ?? null
+})
+
+// Returns the Spotify access token, refreshing it if the access token cookie
+// has expired but a refresh token cookie is still present. Server Components
+// cannot set cookies, so the refreshed token is not persisted — it is valid
+// for the duration of the current request only. Route Handlers (e.g. the
+// incremental sync) persist the updated cookie when they run.
+// Deduped per request via React cache so layout + page share one refresh call.
+export const getOrRefreshSpotifyToken = cache(async (): Promise<string | null> => {
+  const token = await getSpotifyToken()
+  if (token) return token
+
+  const cookieStore = await cookies()
+  const refreshToken = cookieStore.get('sp_refresh_token')?.value
+  if (!refreshToken) return null
+
+  const refreshed = await refreshSpotifyToken(refreshToken)
+  return refreshed?.accessToken ?? null
 })
 
 // Returns the total number of liked songs, or null on failure.

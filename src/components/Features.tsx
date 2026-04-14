@@ -106,74 +106,38 @@ function VibeMatchingVisual() {
   );
 }
 
-function AutoSyncVisual() {
+function ManualSyncVisual() {
   return (
-    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-6 overflow-hidden">
+    <div className="relative h-56 bg-[#ECEAE4] flex flex-col items-center justify-center gap-4 overflow-hidden px-6">
       <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-[#ECEAE4] pointer-events-none" />
 
-      {/* Analog clock */}
-      <div className="relative w-20 h-20 rounded-full border border-black/20 bg-black/[0.10] flex items-center justify-center shadow-[0_0_28px_rgba(29,185,84,0.1)]">
-        <svg viewBox="0 0 40 40" className="w-14 h-14">
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
-            (deg, i) => {
-              const rad = ((deg - 90) * Math.PI) / 180;
-              const x1 = 20 + 14 * Math.cos(rad);
-              const y1 = 20 + 14 * Math.sin(rad);
-              const x2 = 20 + (i % 3 === 0 ? 11 : 12.5) * Math.cos(rad);
-              const y2 = 20 + (i % 3 === 0 ? 11 : 12.5) * Math.sin(rad);
-              return (
-                <line
-                  key={i}
-                  x1={x1}
-                  y1={y1}
-                  x2={x2}
-                  y2={y2}
-                  stroke="#121212"
-                  strokeOpacity={i % 3 === 0 ? 0.3 : 0.1}
-                  strokeWidth={i % 3 === 0 ? 1.5 : 1}
-                />
-              );
-            },
-          )}
-          {/* Hour hand pointing to 12 */}
-          <line
-            x1="20"
-            y1="20"
-            x2="20"
-            y2="12.5"
-            stroke="#121212"
-            strokeOpacity="0.75"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-          />
-          {/* Minute hand pointing to 12 */}
-          <line
-            x1="20"
-            y1="20"
-            x2="20"
-            y2="7"
-            stroke="#1DB954"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-          />
-          <circle cx="20" cy="20" r="1.8" fill="#1DB954" />
+      {/* Last synced label */}
+      <p className="text-[10px] text-black/35 font-medium">Last synced 3 min ago</p>
+
+      {/* Sync button mockup */}
+      <div className="flex items-center gap-2 bg-[#1DB954] rounded-full px-5 py-2.5 shadow-[0_0_20px_rgba(29,185,84,0.25)]">
+        <svg
+          className="w-3.5 h-3.5 text-black shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M1 4v6h6M23 20v-6h-6" />
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15" />
         </svg>
-        <span className="absolute -bottom-5 text-[10px] text-black/35 font-mono tracking-wide">
-          12:00 AM
-        </span>
+        <span className="text-[12px] font-bold text-black">Sync now</span>
       </div>
 
-      {/* Schedule row */}
-      <div className="w-52">
-        <div className="flex items-center justify-between bg-black/[0.12] rounded-xl px-4 py-2.5">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse" />
-            <span className="text-[11px] text-black/70 font-medium">
-              Next sync
-            </span>
-          </div>
-          <span className="text-[11px] text-black/45 font-mono">12:00 AM</span>
+      {/* Result row */}
+      <div className="w-56 bg-black/[0.07] rounded-xl px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#1DB954]" />
+          <span className="text-[11px] text-black/60 font-medium">Sync complete</span>
         </div>
+        <span className="text-[11px] text-[#1DB954] font-semibold">+4 songs</span>
       </div>
     </div>
   );
@@ -269,10 +233,10 @@ function ReviewQueueVisual() {
 
 const SIDE_FEATURES = [
   {
-    Visual: AutoSyncVisual,
-    title: "Auto-Sync Daily",
+    Visual: ManualSyncVisual,
+    title: "On-Demand Sync",
     description:
-      "Every new song you like is automatically scored and slotted into the right playlist daily.",
+      "Tap Sync whenever you want — MoodSort fetches your latest liked songs, removes any you've unliked, and keeps your library perfectly up to date.",
   },
   {
     Visual: ReviewQueueVisual,
@@ -303,7 +267,7 @@ export default function Features() {
             <span className="text-black/35">Nothing you don&apos;t.</span>
           </h2>
           <p className="text-black/50 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-            MoodSort handles everything from vibe matching to daily sync to
+            MoodSort handles everything from vibe matching to on-demand sync to
             discovery, so you never think about playlist management again.
           </p>
         </div>

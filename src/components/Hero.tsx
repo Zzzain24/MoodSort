@@ -56,7 +56,7 @@ export default function Hero() {
         >
           Your music. <span className="text-[#1DB954]">Sorted</span> by mood.{" "}
           <br className="hidden sm:block" />
-          <span className="text-black/80">Automatically.</span>
+          <span className="text-black/80">On demand.</span>
         </h1>
 
         {/* Subheadline */}
