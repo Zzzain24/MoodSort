@@ -7,7 +7,6 @@ import Image from "next/image";
 import {
   LayoutDashboard,
   ListMusic,
-  ClipboardList,
   Zap,
   Settings,
   ChevronDown,
@@ -17,7 +16,6 @@ import {
   PanelLeftOpen,
 } from "lucide-react";
 import { getPlaylistThumbnail, type SpotifyPlaylist } from "@/lib/spotify-utils";
-import { PENDING_REVIEW_COUNT } from "@/lib/constants";
 
 interface SidebarProps {
   displayName: string;
@@ -170,27 +168,6 @@ export function Sidebar({ displayName, avatarUrl, playlists }: SidebarProps) {
           <Zap className="w-4 h-4 shrink-0" />
           {!collapsed && <span className="text-sm font-medium">Run Mood Sort</span>}
         </Link>
-
-        {/* Pending review */}
-        <button
-          disabled
-          title={collapsed ? "Pending review (coming soon)" : "Coming soon"}
-          className={disabledItemClass}
-        >
-          <ClipboardList className="w-4 h-4 shrink-0" />
-          {!collapsed && (
-            <>
-              <span className="text-sm font-medium flex-1 text-left">
-                Pending review
-              </span>
-              {PENDING_REVIEW_COUNT > 0 && (
-                <span className="text-[10px] font-bold bg-[#1DB954]/20 text-[#1DB954]/50 rounded-full px-1.5 py-0.5 leading-none">
-                  {PENDING_REVIEW_COUNT}
-                </span>
-              )}
-            </>
-          )}
-        </button>
 
         <div className="h-px bg-black/[0.07] my-2" />
 

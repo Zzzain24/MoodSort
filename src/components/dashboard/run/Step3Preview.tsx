@@ -52,7 +52,9 @@ function SongRow({
         <p className="text-xs text-black/50 truncate">{song.artist}</p>
       </div>
       {locked && (
-        <Lock className="w-3.5 h-3.5 text-black/25 shrink-0" title="Seed song — cannot be removed" />
+        <span title="Seed song — cannot be removed">
+          <Lock className="w-3.5 h-3.5 text-black/25 shrink-0" />
+        </span>
       )}
       {!locked && !removed && onRemove && (
         <button
