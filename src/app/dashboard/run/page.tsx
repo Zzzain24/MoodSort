@@ -30,7 +30,7 @@ export default async function RunMoodSortPage() {
           albumArt: (song.album_art_url as string | null) ?? undefined,
         };
       })
-      .filter((s): s is LikedSong => s !== null);
+      .filter((s) => s !== null) as LikedSong[];
   }
 
   return (

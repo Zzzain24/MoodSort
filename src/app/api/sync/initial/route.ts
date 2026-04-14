@@ -57,7 +57,8 @@ async function fetchPage(
     }
     if (!res.ok) return null
     return (await res.json()) as SpotifyTracksPage
-  } catch {
+  } catch (err) {
+    console.error('[sync/initial] fetchPage network error at offset', offset, (err as Error).name)
     return null
   }
 }
@@ -107,6 +108,7 @@ export async function POST(request: NextRequest) {
   // ── Fetch all pages from Spotify in parallel batches ──────────────────────
   const firstPage = await fetchPage(token, 0)
   if (!firstPage) {
+    console.error('[sync/initial] failed to fetch first page from Spotify for user', user.id)
     return NextResponse.json(
       { error: 'Failed to fetch from Spotify' },
       { status: 502 }
