@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Step1Details } from "./Step1Details";
 import { Step2SeedPicker } from "./Step2SeedPicker";
 import { Step3Preview } from "./Step3Preview";
 import type { LikedSong, MatchedSong } from "./types";
+import type { AnalyzeResponse, CreatePlaylistResponse } from "@/lib/playlist-types";
 
 type Step = 1 | 2 | 3;
 
@@ -19,19 +21,70 @@ interface CreatePlaylistWizardProps {
 }
 
 export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const [playlistName, setPlaylistName] = useState("");
   const [vibeDescription, setVibeDescription] = useState("");
   const [selectedSeedIds, setSelectedSeedIds] = useState<string[]>([]);
   const [removedMatchIds, setRemovedMatchIds] = useState<string[]>([]);
-
-  // Placeholder — will be replaced with real matched songs from the backend
-  const matchedSongs: MatchedSong[] = [];
+  const [matchedSongs, setMatchedSongs] = useState<MatchedSong[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   const seedSongs = songs.filter((s) => selectedSeedIds.includes(s.id));
 
-  function handleConfirm() {
-    // TODO: wire to backend — create playlist API call
+  async function handleAnalyze() {
+    setIsAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      const res = await fetch("/api/playlist/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playlistName, vibeDescription, seedSongIds: selectedSeedIds }),
+      });
+      if (!res.ok) {
+        setAnalyzeError("Analysis failed. Please try again.");
+        return;
+      }
+      const data = (await res.json()) as AnalyzeResponse;
+      setMatchedSongs(data.matchedSongs);
+      setStep(3);
+    } catch {
+      setAnalyzeError("Network error. Please try again.");
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }
+
+  async function handleConfirm() {
+    const finalSongIds = [
+      ...selectedSeedIds,
+      ...matchedSongs
+        .filter((s) => !removedMatchIds.includes(s.id))
+        .map((s) => s.id),
+    ];
+    setIsCreating(true);
+    setCreateError(null);
+    try {
+      const res = await fetch("/api/playlist/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playlistName, vibeDescription, songIds: finalSongIds }),
+      });
+      if (!res.ok) {
+        setCreateError("Failed to create playlist. Please try again.");
+        return;
+      }
+      const data = (await res.json()) as CreatePlaylistResponse;
+      void data;
+      router.push("/dashboard");
+    } catch {
+      setCreateError("Network error. Please try again.");
+    } finally {
+      setIsCreating(false);
+    }
   }
 
   return (
@@ -92,8 +145,10 @@ export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
             songs={songs}
             selectedSeedIds={selectedSeedIds}
             onSelectionChange={setSelectedSeedIds}
-            onNext={() => setStep(3)}
+            onNext={handleAnalyze}
             onBack={() => setStep(1)}
+            isLoading={isAnalyzing}
+            error={analyzeError}
           />
         )}
         {step === 3 && (
@@ -108,6 +163,8 @@ export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
             }
             onBack={() => setStep(2)}
             onConfirm={handleConfirm}
+            isCreating={isCreating}
+            error={createError}
           />
         )}
       </div>
