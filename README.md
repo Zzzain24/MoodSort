@@ -51,6 +51,10 @@ SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 # OpenAI
 OPENAI_API_KEY=your_openai_api_key
 OPENAI_MODEL=gpt-4.1-nano
+
+# Upstash Redis (rate limiting — optional for local dev, required in production)
+UPSTASH_REDIS_REST_URL=your_upstash_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 ```
 
 ### 3. Set up a Spotify Developer App

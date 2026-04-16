@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit: 10 playlist creations per hour per user
-  const { allowed, retryAfter } = rateLimit(`create:${user.id}`, 1, 60_000)
+  const { allowed, retryAfter } = await rateLimit(`create:${user.id}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },

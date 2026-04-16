@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit: 1 sync per minute per user
-  const { allowed, retryAfter } = rateLimit(`sync_incremental:${user.id}`, 1, 60_000)
+  const { allowed, retryAfter } = await rateLimit(`sync_incremental:${user.id}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },

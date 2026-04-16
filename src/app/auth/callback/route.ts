@@ -7,7 +7,7 @@ const SPOTIFY_REFRESH_COOKIE = 'sp_refresh_token'
 
 export async function GET(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-  const { allowed, retryAfter } = rateLimit(`auth_callback:${ip}`, 10, 60_000)
+  const { allowed, retryAfter } = await rateLimit(`auth_callback:${ip}`, 10, 60_000)
   if (!allowed) {
     return new NextResponse('Too many requests', {
       status: 429,
