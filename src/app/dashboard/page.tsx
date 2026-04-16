@@ -7,6 +7,7 @@ import {
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SyncButton } from "@/components/dashboard/SyncButton";
 import { PlaylistCarousel } from "@/components/dashboard/PlaylistCarousel";
+import { InitialSyncLoader } from "@/components/dashboard/InitialSyncLoader";
 import { PENDING_REVIEW_COUNT } from "@/lib/constants";
 
 function formatRelativeTime(date: Date): string {
@@ -34,8 +35,17 @@ export default async function DashboardPage() {
   const firstName = displayName.split(" ")[0];
 
   // Fetch real Spotify data — getUserPlaylists is deduped with the layout call
-  const token = await getOrRefreshSpotifyToken();
   const admin = createAdminClient();
+  const songCountResult = await admin
+    .from("user_songs")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user!.id);
+
+  if ((songCountResult.count ?? 0) === 0) {
+    return <InitialSyncLoader />;
+  }
+
+  const token = await getOrRefreshSpotifyToken();
   const [likedCount, playlists, syncStateRow] = await Promise.all([
     token ? getLikedSongsCount(token) : Promise.resolve(null),
     token ? getUserPlaylists(token) : Promise.resolve([]),

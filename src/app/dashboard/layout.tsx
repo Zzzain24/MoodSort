@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { MobileBottomNav } from "@/components/dashboard/MobileBottomNav";
-import { SyncTrigger } from "@/components/dashboard/SyncTrigger";
 import { getOrRefreshSpotifyToken, getUserPlaylists } from "@/lib/spotify";
 import type { Metadata } from "next";
 
@@ -51,7 +50,6 @@ export default async function DashboardLayout({
       />
       <main className="flex-1 overflow-y-auto pb-20 md:pb-0">{children}</main>
       <MobileBottomNav />
-      <SyncTrigger />
     </div>
   );
 }
