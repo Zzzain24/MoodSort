@@ -72,12 +72,15 @@ export async function POST() {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) {
+    console.log('[sync/initial] no user')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  console.log('[sync/initial] user', user.id)
 
   // Rate limit: 1 call per minute per user
   const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 1, 60_000)
   if (!allowed) {
+    console.log('[sync/initial] rate limited')
     return NextResponse.json(
       { error: 'Too many requests' },
       { status: 429, headers: { 'Retry-After': String(retryAfter) } }
@@ -87,18 +90,20 @@ export async function POST() {
   const admin = createAdminClient()
 
   // Idempotency: return early if this user already has songs in the DB.
-  const { count } = await admin
+  const { count, error: countErr } = await admin
     .from('user_songs')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
+  console.log('[sync/initial] count', count, 'countErr', countErr?.message)
 
   if (count && count > 0) {
+    console.log('[sync/initial] already synced')
     return NextResponse.json({ alreadySynced: true })
   }
 
   const token = await getSpotifyToken()
+  console.log('[sync/initial] token present', !!token)
   if (!token) {
-    // Token is missing or expired — user needs to re-authenticate with Spotify
     return NextResponse.json({ error: 'Spotify token expired' }, { status: 400 })
   }
 
