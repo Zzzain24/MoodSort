@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
   // repeat calls cheap, but we still prevent abuse.
   const ip =
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-  const { allowed, retryAfter } = rateLimit(`sync_initial:${ip}`, 3, 60_000)
+  const { allowed, retryAfter } = await rateLimit(`sync_initial:${ip}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },

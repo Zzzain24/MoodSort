@@ -13,6 +13,8 @@ interface Step3PreviewProps {
   onRestoreMatch: (id: string) => void;
   onBack: () => void;
   onConfirm: () => void;
+  isCreating: boolean;
+  error: string | null;
 }
 
 function SongRow({
@@ -86,6 +88,8 @@ export function Step3Preview({
   onRestoreMatch,
   onBack,
   onConfirm,
+  isCreating,
+  error,
 }: Step3PreviewProps) {
   const visibleMatches = matchedSongs.filter((s) => !removedMatchIds.includes(s.id));
   const removedMatches = matchedSongs.filter((s) => removedMatchIds.includes(s.id));
@@ -177,19 +181,33 @@ export function Step3Preview({
       )}
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-2">
-        <button
-          onClick={onBack}
-          className="text-sm font-medium text-black/50 hover:text-[#121212] transition-colors"
-        >
-          ← Back
-        </button>
-        <button
-          onClick={onConfirm}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#1DB954] text-white text-sm font-semibold hover:bg-[#1DB954]/90 shadow-sm transition-all duration-150"
-        >
-          Create Playlist
-        </button>
+      <div className="flex flex-col gap-1 pt-2">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={onBack}
+            disabled={isCreating}
+            className="text-sm font-medium text-black/50 hover:text-[#121212] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            ← Back
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isCreating}
+            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#1DB954] text-white text-sm font-semibold hover:bg-[#1DB954]/90 shadow-sm transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isCreating ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                Creating...
+              </>
+            ) : (
+              "Create Playlist"
+            )}
+          </button>
+        </div>
+        {error && (
+          <p className="text-xs text-red-500 text-right">{error}</p>
+        )}
       </div>
     </div>
   );

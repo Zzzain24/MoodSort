@@ -13,6 +13,8 @@ interface Step2SeedPickerProps {
   onSelectionChange: (ids: string[]) => void;
   onNext: () => void;
   onBack: () => void;
+  isLoading: boolean;
+  error: string | null;
 }
 
 export function Step2SeedPicker({
@@ -21,6 +23,8 @@ export function Step2SeedPicker({
   onSelectionChange,
   onNext,
   onBack,
+  isLoading,
+  error,
 }: Step2SeedPickerProps) {
   const [query, setQuery] = useState("");
   const [shakeId, setShakeId] = useState<string | null>(null);
@@ -169,18 +173,30 @@ export function Step2SeedPicker({
           </span>
           <button
             onClick={onNext}
-            disabled={!canProceed}
+            disabled={!canProceed || isLoading}
             className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
-              canProceed
+              canProceed && !isLoading
                 ? "bg-[#1DB954] text-white hover:bg-[#1DB954]/90 shadow-sm"
                 : "bg-black/[0.06] text-black/30 cursor-not-allowed"
             }`}
           >
-            Analyze
-            <span className="text-base leading-none">→</span>
+            {isLoading ? (
+              <>
+                <span className="w-4 h-4 border-2 border-black/20 border-t-black/50 rounded-full animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              <>
+                Analyze
+                <span className="text-base leading-none">→</span>
+              </>
+            )}
           </button>
         </div>
       </div>
+      {error && (
+        <p className="text-xs text-red-500 text-right">{error}</p>
+      )}
     </div>
   );
 }

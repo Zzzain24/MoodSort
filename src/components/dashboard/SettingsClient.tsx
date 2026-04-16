@@ -17,7 +17,6 @@ export function SettingsClient({
 }: SettingsClientProps) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isPending, startTransition] = useTransition();
-
   const initial = displayName.charAt(0).toUpperCase();
 
   function handleDelete() {
