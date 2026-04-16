@@ -12,7 +12,7 @@ export default function SpotifyLoginButton() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'spotify',
       options: {
-        scopes: 'user-library-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private',
+        scopes: 'user-read-email user-read-private user-library-read playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private',
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
