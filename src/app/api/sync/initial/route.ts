@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getSpotifyToken } from '@/lib/spotify'
@@ -65,26 +65,23 @@ async function fetchPage(
 
 // ─── Route ────────────────────────────────────────────────────────────────────
 
-export async function POST(request: NextRequest) {
-  // Rate limit: 3 calls per minute per IP — the idempotency check makes
-  // repeat calls cheap, but we still prevent abuse.
-  const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown'
-  const { allowed, retryAfter } = await rateLimit(`sync_initial:${ip}`, 1, 60_000)
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
-    )
-  }
-
-  // Verify authenticated session
+export async function POST() {
+  // Verify authenticated session first so we can key rate limit by user ID
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Rate limit: 1 call per minute per user
+  const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 1, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
   }
 
   const admin = createAdminClient()
