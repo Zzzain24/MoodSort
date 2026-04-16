@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit
-  const { allowed, retryAfter } = rateLimit(`analyze:${user.id}`, 5, 60_000)
+  const { allowed, retryAfter } = rateLimit(`analyze:${user.id}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit: 10 playlist creations per hour per user
-  const { allowed, retryAfter } = rateLimit(`create:${user.id}`, 10, 3_600_000)
+  const { allowed, retryAfter } = rateLimit(`create:${user.id}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },
@@ -107,25 +107,27 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         name: sanitizeUserText(playlistName),
         description: vibeDescription ? sanitizeUserText(vibeDescription) : '',
-        public: false,
+        public: true,
       }),
     }
   )
   if (!createRes.ok) {
-    console.error('[playlist/create] Spotify playlist creation failed', createRes.status)
+    let createErrBody = ''
+    try { createErrBody = await createRes.text() } catch { /* ignore */ }
+    console.error('[playlist/create] Spotify playlist creation failed', createRes.status, createErrBody)
     return NextResponse.json({ error: 'Failed to create playlist' }, { status: 502 })
   }
   const playlist = (await createRes.json()) as {
     id: string
     external_urls: { spotify: string }
   }
-
   // Add songs in batches of 100
   const spotifyUris = songIds.map((id) => `spotify:track:${id}`)
+  let trackAddFailed = false
   for (let i = 0; i < spotifyUris.length; i += SPOTIFY_ADD_LIMIT) {
     const chunk = spotifyUris.slice(i, i + SPOTIFY_ADD_LIMIT)
     const addRes = await fetch(
-      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlist.id)}/tracks`,
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlist.id)}/items`,
       {
         method: 'POST',
         headers: {
@@ -137,9 +139,29 @@ export async function POST(request: NextRequest) {
       }
     )
     if (!addRes.ok) {
-      console.error(`[playlist/create] failed to add batch at offset ${i}`, addRes.status)
+      let errBody = ''
+      try { errBody = await addRes.text() } catch { /* ignore */ }
+      console.error(
+        `[playlist/create] failed to add batch at offset ${i}`,
+        addRes.status,
+        errBody
+      )
+      trackAddFailed = true
       break
     }
+  }
+
+  // If tracks failed to add, delete the orphaned empty playlist and return error
+  if (trackAddFailed) {
+    await fetch(
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlist.id)}/followers`,
+      {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    ).catch(() => { /* non-fatal */ })
+    const error = 'Failed to add songs to playlist'
+    return NextResponse.json({ error }, { status: 502 })
   }
 
   // Store playlist record in DB

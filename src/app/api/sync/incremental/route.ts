@@ -37,7 +37,6 @@ const SPOTIFY_REFRESH_COOKIE = 'sp_refresh_token'
 const PAGE_SIZE = 50
 const BATCH_SIZE = 5
 const DB_CHUNK = 500
-const COOLDOWN_MS = 1 * 60 * 1000 // 1 minute
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -110,7 +109,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Rate limit: 1 sync per minute per user
-  const { allowed, retryAfter } = rateLimit(`sync_incremental:${user.id}`, 1, COOLDOWN_MS)
+  const { allowed, retryAfter } = rateLimit(`sync_incremental:${user.id}`, 1, 60_000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many requests' },
