@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Search, Music2, CheckCircle2 } from "lucide-react";
 import type { LikedSong } from "./types";
+import { formatCountdown } from "@/lib/format-time";
 
 const MAX_SEEDS = 10;
 
@@ -14,6 +15,7 @@ interface Step2SeedPickerProps {
   onNext: () => void;
   onBack: () => void;
   isLoading: boolean;
+  cooldownMs: number;
   error: string | null;
 }
 
@@ -24,8 +26,10 @@ export function Step2SeedPicker({
   onNext,
   onBack,
   isLoading,
+  cooldownMs,
   error,
 }: Step2SeedPickerProps) {
+  const inCooldown = cooldownMs > 0;
   const [query, setQuery] = useState("");
   const [shakeId, setShakeId] = useState<string | null>(null);
   const shakeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -173,9 +177,9 @@ export function Step2SeedPicker({
           </span>
           <button
             onClick={onNext}
-            disabled={!canProceed || isLoading}
+            disabled={!canProceed || isLoading || inCooldown}
             className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
-              canProceed && !isLoading
+              canProceed && !isLoading && !inCooldown
                 ? "bg-[#1DB954] text-white hover:bg-[#1DB954]/90 shadow-sm"
                 : "bg-black/[0.06] text-black/30 cursor-not-allowed"
             }`}
@@ -185,6 +189,8 @@ export function Step2SeedPicker({
                 <span className="w-4 h-4 border-2 border-black/20 border-t-black/50 rounded-full animate-spin" />
                 Analyzing...
               </>
+            ) : inCooldown ? (
+              formatCountdown(cooldownMs)
             ) : (
               <>
                 Analyze
