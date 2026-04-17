@@ -3,14 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const COOLDOWN_MS = 1 * 60 * 1000; // 1 minute
+import { formatCountdown } from "@/lib/format-time";
 
-function formatCountdown(ms: number): string {
-  const totalSeconds = Math.ceil(ms / 1000);
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
+const COOLDOWN_MS = 1 * 60 * 1000; // 1 minute
 
 interface SyncButtonProps {
   lastSyncedAt: string | null; // ISO string from server, null if never synced

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Step1Details } from "./Step1Details";
 import { Step2SeedPicker } from "./Step2SeedPicker";
@@ -32,6 +32,24 @@ export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [analyzeLockedUntil, setAnalyzeLockedUntil] = useState(0);
+  const [analyzeCooldownMs, setAnalyzeCooldownMs] = useState(0);
+
+  useEffect(() => {
+    if (!analyzeLockedUntil) return;
+    function getRemaining() {
+      return Math.max(0, analyzeLockedUntil - Date.now());
+    }
+    const initial = getRemaining();
+    setAnalyzeCooldownMs(initial);
+    if (initial === 0) return;
+    const interval = setInterval(() => {
+      const r = getRemaining();
+      setAnalyzeCooldownMs(r);
+      if (r === 0) clearInterval(interval);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [analyzeLockedUntil]);
 
   const seedSongs = songs.filter((s) => selectedSeedIds.includes(s.id));
 
@@ -44,6 +62,11 @@ export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playlistName, vibeDescription, seedSongIds: selectedSeedIds }),
       });
+      if (res.status === 429) {
+        const retryAfter = parseInt(res.headers.get("Retry-After") ?? "60", 10);
+        setAnalyzeLockedUntil(Date.now() + retryAfter * 1000);
+        return;
+      }
       if (!res.ok) {
         setAnalyzeError("Analysis failed. Please try again.");
         return;
@@ -148,6 +171,7 @@ export function CreatePlaylistWizard({ songs }: CreatePlaylistWizardProps) {
             onNext={handleAnalyze}
             onBack={() => setStep(1)}
             isLoading={isAnalyzing}
+            cooldownMs={analyzeCooldownMs}
             error={analyzeError}
           />
         )}
