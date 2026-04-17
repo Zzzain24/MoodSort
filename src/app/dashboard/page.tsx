@@ -87,7 +87,7 @@ export default async function DashboardPage() {
     ? formatRelativeTime(new Date(latestAddedAt))
     : "—";
 
-  const latestSong = latestSongResult.data?.songs as
+  const latestSong = (latestSongResult.data?.songs ?? null) as unknown as
     | { name: string; artist: string }
     | null;
 
