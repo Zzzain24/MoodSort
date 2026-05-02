@@ -117,6 +117,15 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  const admin = createAdminClient()
+
+  // Stamp last_synced_at now so the UI cooldown is enforced even if the sync
+  // times out or fails before reaching the end of this function.
+  const lastSyncedAt = new Date().toISOString()
+  await admin
+    .from('user_sync_state')
+    .upsert({ user_id: user.id, last_synced_at: lastSyncedAt }, { onConflict: 'user_id' })
+
   // Resolve Spotify token — refresh if the access token has expired
   let token = await getSpotifyToken()
   let newAccessToken: { value: string; maxAge: number } | null = null
@@ -134,8 +143,6 @@ export async function POST(request: NextRequest) {
     token = refreshed.accessToken
     newAccessToken = { value: refreshed.accessToken, maxAge: refreshed.expiresIn }
   }
-
-  const admin = createAdminClient()
 
   // ── Fetch all liked songs from Spotify ───────────────────────────────────
 
@@ -233,13 +240,6 @@ export async function POST(request: NextRequest) {
   // ── Add newly liked songs ─────────────────────────────────────────────────
 
   const added = await upsertSongs(admin, user.id, itemsToSongRecords(toAddItems))
-
-  // ── Update sync state ─────────────────────────────────────────────────────
-
-  const lastSyncedAt = new Date().toISOString()
-  await admin
-    .from('user_sync_state')
-    .upsert({ user_id: user.id, last_synced_at: lastSyncedAt }, { onConflict: 'user_id' })
 
   const res = NextResponse.json({ added, removed, lastSyncedAt })
   if (newAccessToken) {
