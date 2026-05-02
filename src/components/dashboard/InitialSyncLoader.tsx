@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export function InitialSyncLoader() {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [noSongs, setNoSongs] = useState(false);
   const [bypassed, setBypassed] = useState(false);
 
   useEffect(() => {
@@ -21,8 +22,7 @@ export function InitialSyncLoader() {
           if (body.alreadySynced || (body.imported !== undefined && body.imported > 0)) {
             router.refresh();
           } else {
-            // Sync completed but wrote 0 songs — treat as an error rather than looping
-            setError(true);
+            setNoSongs(true);
           }
         } else if (res.status === 429) {
           const delay = parseInt(res.headers.get("Retry-After") ?? "10", 10) * 1000;
@@ -53,7 +53,30 @@ export function InitialSyncLoader() {
         <span className="text-2xl font-bold tracking-tight text-[#1DB954]">Sort</span>
       </a>
 
-      {error ? (
+      {noSongs ? (
+        <>
+          <div className="text-center">
+            <p className="text-base font-bold text-[#121212]">No liked songs found</p>
+            <p className="text-sm text-black/50 mt-1">
+              Like some songs on Spotify, then come back and we&apos;ll import them.
+            </p>
+          </div>
+          <a
+            href="https://open.spotify.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold px-6 py-2.5 text-sm transition-all duration-200"
+          >
+            Open Spotify
+          </a>
+          <button
+            onClick={() => setBypassed(true)}
+            className="text-sm text-black/40 hover:text-black/70 transition-colors duration-200"
+          >
+            Skip for now
+          </button>
+        </>
+      ) : error ? (
         <>
           <div className="text-center">
             <p className="text-base font-bold text-[#121212]">Couldn&apos;t import your library</p>

@@ -91,8 +91,8 @@ export async function POST() {
     return NextResponse.json({ alreadySynced: true })
   }
 
-  // Rate limit: 3 calls per minute per user (allows retries after timeouts)
-  const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 3, 60_000)
+  // Rate limit: 1 call per minute per user
+  const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 1, 60_000)
   if (!allowed) {
     console.log('[sync/initial] rate limited')
     return NextResponse.json(
