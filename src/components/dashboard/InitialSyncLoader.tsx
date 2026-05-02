@@ -17,11 +17,17 @@ export function InitialSyncLoader() {
         if (cancelled) return;
 
         if (res.ok) {
-          router.replace("/dashboard");
+          const body = await res.json() as { imported?: number; alreadySynced?: boolean };
+          if (body.alreadySynced || (body.imported !== undefined && body.imported > 0)) {
+            router.refresh();
+          } else {
+            // Sync completed but wrote 0 songs — treat as an error rather than looping
+            setError(true);
+          }
         } else if (res.status === 429) {
           const delay = parseInt(res.headers.get("Retry-After") ?? "10", 10) * 1000;
           await new Promise((r) => setTimeout(r, delay));
-          if (!cancelled) router.replace("/dashboard");
+          if (!cancelled) router.refresh();
         } else {
           setError(true);
         }
