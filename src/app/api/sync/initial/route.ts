@@ -77,19 +77,9 @@ export async function POST() {
   }
   console.log('[sync/initial] user', user.id)
 
-  // Rate limit: 1 call per minute per user
-  const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 1, 60_000)
-  if (!allowed) {
-    console.log('[sync/initial] rate limited')
-    return NextResponse.json(
-      { error: 'Too many requests' },
-      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
-    )
-  }
-
   const admin = createAdminClient()
 
-  // Idempotency: return early if this user already has songs in the DB.
+  // Idempotency check first — already-synced users skip rate limiting entirely.
   const { count, error: countErr } = await admin
     .from('user_songs')
     .select('*', { count: 'exact', head: true })
@@ -99,6 +89,16 @@ export async function POST() {
   if (count && count > 0) {
     console.log('[sync/initial] already synced')
     return NextResponse.json({ alreadySynced: true })
+  }
+
+  // Rate limit: 3 calls per minute per user (allows retries after timeouts)
+  const { allowed, retryAfter } = await rateLimit(`sync_initial:${user.id}`, 3, 60_000)
+  if (!allowed) {
+    console.log('[sync/initial] rate limited')
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
   }
 
   const token = await getSpotifyToken()

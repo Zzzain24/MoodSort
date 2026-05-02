@@ -10,9 +10,16 @@ export function InitialSyncLoader() {
 
   useEffect(() => {
     fetch("/api/sync/initial", { method: "POST" })
-      .then((res) => {
-        if (res.ok || res.status === 429) router.refresh();
-        else setError(true);
+      .then(async (res) => {
+        if (res.ok) {
+          router.refresh();
+        } else if (res.status === 429) {
+          const delay = parseInt(res.headers.get("Retry-After") ?? "10", 10) * 1000;
+          await new Promise((r) => setTimeout(r, delay));
+          router.refresh();
+        } else {
+          setError(true);
+        }
       })
       .catch(() => setError(true));
   }, [router]);
