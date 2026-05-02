@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getSpotifyToken } from '@/lib/spotify'
+import { getOrRefreshSpotifyToken } from '@/lib/spotify'
 import { rateLimit } from '@/lib/rate-limit'
 
 // ─── Spotify types ────────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ export async function POST() {
     )
   }
 
-  const token = await getSpotifyToken()
+  const token = await getOrRefreshSpotifyToken()
   console.log('[sync/initial] token present', !!token)
   if (!token) {
     return NextResponse.json({ error: 'Spotify token expired' }, { status: 400 })

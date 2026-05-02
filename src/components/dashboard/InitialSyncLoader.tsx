@@ -9,20 +9,31 @@ export function InitialSyncLoader() {
   const [bypassed, setBypassed] = useState(false);
 
   useEffect(() => {
-    fetch("/api/sync/initial", { method: "POST" })
-      .then(async (res) => {
+    let cancelled = false;
+
+    const run = async () => {
+      try {
+        const res = await fetch("/api/sync/initial", { method: "POST" });
+        if (cancelled) return;
+
         if (res.ok) {
-          router.refresh();
+          router.replace("/dashboard");
         } else if (res.status === 429) {
           const delay = parseInt(res.headers.get("Retry-After") ?? "10", 10) * 1000;
           await new Promise((r) => setTimeout(r, delay));
-          router.refresh();
+          if (!cancelled) router.replace("/dashboard");
         } else {
           setError(true);
         }
-      })
-      .catch(() => setError(true));
-  }, [router]);
+      } catch {
+        if (!cancelled) setError(true);
+      }
+    };
+
+    run();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (bypassed) return null;
 
