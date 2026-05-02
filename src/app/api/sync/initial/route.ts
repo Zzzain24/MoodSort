@@ -173,7 +173,7 @@ export async function POST() {
   // ── Upsert into global songs table in chunks ──────────────────────────────
   for (let i = 0; i < songRecords.length; i += DB_CHUNK) {
     const chunk = songRecords.slice(i, i + DB_CHUNK)
-    await admin.from('songs').upsert(
+    const { error: songsErr } = await admin.from('songs').upsert(
       chunk.map((s) => ({
         spotify_track_id: s.spotify_track_id,
         name: s.name,
@@ -182,6 +182,10 @@ export async function POST() {
       })),
       { onConflict: 'spotify_track_id', ignoreDuplicates: true }
     )
+    if (songsErr) {
+      console.error('[sync/initial] songs upsert failed', songsErr.message, 'user', user.id)
+      return NextResponse.json({ error: 'Database write failed' }, { status: 500 })
+    }
   }
 
   // ── Resolve song UUIDs so we can populate user_songs ─────────────────────
@@ -190,13 +194,22 @@ export async function POST() {
 
   for (let i = 0; i < spotifyIds.length; i += DB_CHUNK) {
     const chunk = spotifyIds.slice(i, i + DB_CHUNK)
-    const { data: rows } = await admin
+    const { data: rows, error: selectErr } = await admin
       .from('songs')
       .select('id, spotify_track_id')
       .in('spotify_track_id', chunk)
+    if (selectErr) {
+      console.error('[sync/initial] songs select failed', selectErr.message, 'user', user.id)
+      return NextResponse.json({ error: 'Database read failed' }, { status: 500 })
+    }
     for (const row of rows ?? []) {
       songIdMap.set(row.spotify_track_id as string, row.id as string)
     }
+  }
+
+  if (songIdMap.size === 0) {
+    console.error('[sync/initial] songIdMap empty after upsert — songs table may have rejected writes, user', user.id)
+    return NextResponse.json({ error: 'Database write failed' }, { status: 500 })
   }
 
   // ── Bulk insert into user_songs ───────────────────────────────────────────
@@ -216,9 +229,13 @@ export async function POST() {
 
   for (let i = 0; i < userSongRows.length; i += DB_CHUNK) {
     const chunk = userSongRows.slice(i, i + DB_CHUNK)
-    await admin
+    const { error: userSongsErr } = await admin
       .from('user_songs')
       .upsert(chunk, { onConflict: 'user_id,song_id', ignoreDuplicates: true })
+    if (userSongsErr) {
+      console.error('[sync/initial] user_songs upsert failed', userSongsErr.message, 'user', user.id)
+      return NextResponse.json({ error: 'Database write failed' }, { status: 500 })
+    }
   }
 
   return NextResponse.json({ imported: userSongRows.length })
